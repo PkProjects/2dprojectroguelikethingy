@@ -40,8 +40,7 @@ public class ElementScript : MonoBehaviour
 
         
         transform.Translate(velocity * Time.deltaTime * 2);
-        Debug.Log(velocity);
-        
+       
         distance = Vector3.Distance(origin, this.transform.position);
 
         if (distance >= 10)
