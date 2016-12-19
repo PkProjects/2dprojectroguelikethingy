@@ -4,7 +4,7 @@ using System;
 
 public class BaseEnemyScript : MonoBehaviour
 {
-
+    public int health = 100;
     public GameObject player;
     public int activationRadius = 3;
     public bool patrol = true;
@@ -34,7 +34,10 @@ public class BaseEnemyScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        player = GameObject.Find("Player");
+        Debug.Log(player);
+        bullet = (GameObject)Resources.Load("Bullet");
+        Debug.Log(bullet);
         sprite = gameObject.GetComponent<SpriteRenderer>();
         rb = gameObject.GetComponent<Rigidbody2D>();
         shootLoc = this.gameObject.transform.GetChild(0).gameObject;
@@ -166,6 +169,11 @@ public class BaseEnemyScript : MonoBehaviour
             }
         }
 
+        if (health <= 0)
+        {
+            Destroy(this.gameObject);
+        }
+
     }
 
     void SwitchCase()
@@ -177,34 +185,33 @@ public class BaseEnemyScript : MonoBehaviour
 
     void changeDirection()
     {
-        Debug.Log(caseNr);
-      
+           
 
 
 
         if (caseNr == 0 || caseNr == 2 || caseNr == 3)
         {
-            Debug.Log("Should go down");
+            
             caseNr = 1;
         }
 
         if (caseNr == 1 || caseNr == 4 || caseNr == 5)
         {
-            Debug.Log("Should go up");
+            
             caseNr = 0;
         }
 
         if (caseNr == 6)
         {
 
-            Debug.Log("Should go left");
+            
             caseNr = 7;
         } 
 
        if (caseNr == 7)
        {
            
-           Debug.Log("Should go right");
+          
            caseNr = 6;
         }
 
