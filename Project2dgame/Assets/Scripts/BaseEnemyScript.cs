@@ -26,7 +26,7 @@ public class BaseEnemyScript : MonoBehaviour
     public GameObject bullet;
     private Quaternion rotDir;
 
-    private float rayRange;
+    private float rayRange =2f;
     public RaycastHit2D hit;
     public float distance;
 
@@ -112,53 +112,51 @@ public class BaseEnemyScript : MonoBehaviour
                 case 0: //Walk up
                     gameObject.transform.Translate(new Vector2(0, -1) * speed);
                     sprite.transform.rotation = (Quaternion.AngleAxis(180, Vector3.forward));
-                    rayRange = 0.1f;
-                    break;
+                                        break;
 
 
                 case 1: //Walk down
                     gameObject.transform.Translate(new Vector2(0, -1) * speed);
                     sprite.transform.rotation = (Quaternion.AngleAxis(0, Vector3.forward));
-                    rayRange = 0.1f;
-                    break;
+                                       break;
 
 
 
                 case 2: //Walk up left
                     gameObject.transform.Translate(new Vector2(0, -1) * speed);
                     sprite.transform.rotation = (Quaternion.AngleAxis(225, Vector3.forward));
-                    rayRange = 0.5f;
+                    
                     break;
 
                 case 3: //Walk up right
                     gameObject.transform.Translate(new Vector2(0, -1) * speed);
                     sprite.transform.rotation = (Quaternion.AngleAxis(135, Vector3.forward));
-                    rayRange = 0.5f;
+                    
                     break;
 
 
                 case 4: //Walk down right
                     gameObject.transform.Translate(new Vector2(0, -1) * speed);
                     sprite.transform.rotation = (Quaternion.AngleAxis(45, Vector3.forward));
-                    rayRange = 0.5f;
+                    
                     break;
 
                 case 5: //Walk down left
                     gameObject.transform.Translate(new Vector2(0, -1) * speed);
                     sprite.transform.rotation = (Quaternion.AngleAxis(315, Vector3.forward));
-                    rayRange = 0.5f;
+                    
                     break;
 
                 case 6: //Walk right
                     gameObject.transform.Translate(new Vector2(0, -1) * speed);
                     sprite.transform.rotation = (Quaternion.AngleAxis(90, Vector3.forward));
-                    rayRange = 0.1f;
+                    
                     break;
 
                 case 7: //Walk left
                     gameObject.transform.Translate(new Vector2(0, -1) * speed);
                     sprite.transform.rotation = (Quaternion.AngleAxis(270, Vector3.forward));
-                    rayRange = 0.1f;
+                    
                     break;
 
             }
