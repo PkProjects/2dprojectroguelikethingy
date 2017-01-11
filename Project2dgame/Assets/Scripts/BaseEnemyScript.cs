@@ -60,7 +60,7 @@ public class BaseEnemyScript : MonoBehaviour
 
         if (hit.collider != null)
         {
-            if (hit.collider.tag == "wall")
+            if (hit.collider.tag == "wall" || hit.collider.tag == "enemy" )
             {
                 Debug.Log(hit.collider.tag);
                 changeDirection();
