@@ -26,7 +26,7 @@ public class BaseEnemyScript : MonoBehaviour
     public GameObject bullet;
     private Quaternion rotDir;
 
-    private float rayRange =2f;
+    private float rayRange =0.5f;
     public RaycastHit2D hit;
     public float distance;
 
@@ -35,9 +35,9 @@ public class BaseEnemyScript : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("Player");
-        Debug.Log(player);
+        
         bullet = (GameObject)Resources.Load("Bullet");
-        Debug.Log(bullet);
+       
         sprite = gameObject.GetComponent<SpriteRenderer>();
         rb = gameObject.GetComponent<Rigidbody2D>();
         shootLoc = this.gameObject.transform.GetChild(0).gameObject;
@@ -51,7 +51,7 @@ public class BaseEnemyScript : MonoBehaviour
     void FixedUpdate()
     {
 
-        //Debug.Log(caseNr);
+        
         Vector3 forward = transform.TransformDirection(Vector3.down) * 10;
 
         hit = Physics2D.Raycast(gameObject.transform.position, forward, rayRange);
@@ -194,13 +194,13 @@ public class BaseEnemyScript : MonoBehaviour
          
         if (caseNr == 0 || caseNr == 2 || caseNr == 3)
         {
-            Debug.Log("GO DOWN");
+            
             caseNr = 1;
         } else
 
         if (caseNr == 1 || caseNr == 4 || caseNr == 5)
         {
-            Debug.Log("GO UP");
+            
             caseNr = 0;
         } else
 
