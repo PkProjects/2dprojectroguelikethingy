@@ -9,6 +9,7 @@ public class playerScript : MonoBehaviour
     public int moveSpeed = 10;
     public int health = 100;
     public Text healthText;
+    public float speedCap = 6;
 
     // Use this for initialization
     void Start()
@@ -39,6 +40,60 @@ public class playerScript : MonoBehaviour
             rigid.AddForce(-Vector2.up * moveSpeed);
         }
 
+
+        // When keys are released resets the direction's velocity
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            rigid.velocity = new Vector2(rigid.velocity.x, 0);
+        }
+
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            rigid.velocity = new Vector2(0, rigid.velocity.y);
+        }
+
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            rigid.velocity = new Vector2(0, rigid.velocity.y);
+        }
+
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            rigid.velocity = new Vector2(rigid.velocity.x, 0);
+        }
+
+
+        if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
+        {
+            rigid.velocity = new Vector2(0, rigid.velocity.y);
+        }
+
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.S))
+        {
+            rigid.velocity = new Vector2(rigid.velocity.x, 0);
+        }
+
+        if (rigid.velocity.x >= speedCap)
+        {
+            rigid.velocity = new Vector2(speedCap, rigid.velocity.y);
+        }
+
+        if (rigid.velocity.x <= -speedCap)
+        {
+            rigid.velocity = new Vector2(-speedCap, rigid.velocity.y);
+        }
+
+        if (rigid.velocity.y >= speedCap)
+        {
+            rigid.velocity = new Vector2(rigid.velocity.x, speedCap);
+        }
+
+        if (rigid.velocity.y <= -speedCap)
+        {
+            rigid.velocity = new Vector2(rigid.velocity.x, -speedCap);
+        }
+
         healthText.text = health.ToString();
+        
     }
 }
