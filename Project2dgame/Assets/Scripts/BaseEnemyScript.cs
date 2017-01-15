@@ -5,7 +5,7 @@ using System;
 public class BaseEnemyScript : MonoBehaviour
 {
     public int health = 100;
-    public GameObject player;
+    private GameObject player;
     public int activationRadius = 3;
     public bool patrol = true;
     public bool readyShot = false;
@@ -23,13 +23,17 @@ public class BaseEnemyScript : MonoBehaviour
     public float speed = 0.05f;
     [Range(0f, 10f)]
     public float bulletSpeed = 2f;
-    public GameObject bullet;
+    private GameObject bullet;
     private Quaternion rotDir;
 
     private float rayRange =0.5f;
+    private float longRayRange = 6f;
     public RaycastHit2D hit;
+    public RaycastHit2D longHit;
     public float distance;
-
+    private float playerDistance;
+    private bool followPlayer;
+    public int type;
 
     // Use this for initialization
     void Start()
@@ -50,26 +54,49 @@ public class BaseEnemyScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
         
         Vector3 forward = transform.TransformDirection(Vector3.down) * 10;
 
         hit = Physics2D.Raycast(gameObject.transform.position, forward, rayRange);
+        longHit = Physics2D.Raycast(gameObject.transform.position, forward, longRayRange);
+
         Debug.DrawRay(gameObject.transform.position, forward, Color.green);
-        Debug.Log(hit.collider);
+        
 
         if (hit.collider != null)
         {
             if (hit.collider.tag == "wall" || hit.collider.tag == "enemy" )
             {
-                Debug.Log(hit.collider.tag);
-                changeDirection();
+                SwitchCase();
+                
+            }
+            
+            
+        }
+
+        if (longHit.collider != null)
+        {
+            if (longHit.collider.tag == "player")
+            {
+                playerDistance = Vector3.Distance(this.transform.position, player.transform.position);
+                Debug.Log(playerDistance = Vector3.Distance(this.transform.position, player.transform.position));
+
+                if (playerDistance >= 1)
+                {
+                    followPlayer = true;
+                    Debug.Log("IS this working");
+                }
+                else if (playerDistance < 1)
+                {
+                    followPlayer = false;
+                    Debug.Log("IS this working2");
+                }
             }
         }
 
 
 
-        Vector3 difference = gameObject.transform.position - player.transform.position;
+            Vector3 difference = gameObject.transform.position - player.transform.position;
 
         if (difference.magnitude < activationRadius)
         {
@@ -78,6 +105,12 @@ public class BaseEnemyScript : MonoBehaviour
             transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
             sprite.flipY = false;
             patrol = false;
+
+            if (followPlayer == true)
+            {
+                this.transform.Translate(-dir * speed);
+                
+            }
 
             updateCount++;
 
@@ -189,37 +222,9 @@ public class BaseEnemyScript : MonoBehaviour
 
     }
 
-    void changeDirection()
-    {
-         
-        if (caseNr == 0 || caseNr == 2 || caseNr == 3)
-        {
-            
-            caseNr = 1;
-        } else
 
-        if (caseNr == 1 || caseNr == 4 || caseNr == 5)
-        {
-            
-            caseNr = 0;
-        } else
+   }
 
-        if (caseNr == 6)
-        {
-
-            
-            caseNr = 7;
-        } else
-
-       if (caseNr == 7)
-       {
-           
-          
-           caseNr = 6;
-        }
-
-    }
-}
                   
            
 

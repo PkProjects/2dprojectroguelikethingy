@@ -11,6 +11,7 @@ public class ElementScript : MonoBehaviour
 
     private Vector3 origin;
     private float distance;
+    public int eType;
 
     // Use this for initialization
     void Start()
@@ -28,7 +29,21 @@ public class ElementScript : MonoBehaviour
 
         if (collision.collider.tag == "enemy")
         {
-            collision.collider.GetComponent<BaseEnemyScript>().health -= 10;
+            if (collision.collider.GetComponent<BaseEnemyScript>().type == eType)
+            {
+                collision.collider.GetComponent<BaseEnemyScript>().health -= 5;
+            }
+
+            else
+            {
+                collision.collider.GetComponent<BaseEnemyScript>().health -= 10;
+                Destroy(this.gameObject);
+            }
+           
+        }
+
+        if (collision.collider.tag == "wall")
+        {
             Destroy(this.gameObject);
         }
 
