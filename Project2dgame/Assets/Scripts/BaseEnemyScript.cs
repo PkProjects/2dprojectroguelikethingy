@@ -81,14 +81,14 @@ public class BaseEnemyScript : MonoBehaviour
 			if (longHit.collider != null) {
 				if (longHit.collider.tag == "player") {
 					playerDistance = Vector3.Distance (this.transform.position, player.transform.position);
-					Debug.Log (playerDistance = Vector3.Distance (this.transform.position, player.transform.position));
+					//Debug.Log (playerDistance = Vector3.Distance (this.transform.position, player.transform.position));
 
 					if (playerDistance >= 1) {
 						followPlayer = true;
-						Debug.Log ("IS this working");
+						//Debug.Log ("IS this working");
 					} else if (playerDistance < 1) {
 						followPlayer = false;
-						Debug.Log ("IS this working2");
+						//Debug.Log ("IS this working2");
 					}
 				}
 			}

@@ -13,13 +13,18 @@ public class MazeGenerator : MonoBehaviour
 	public GameObject floorTile;
 	public GameObject wallTile;
 	public GameObject doorTile;
+	public GameObject prisonDoor;
+	public GameObject prisonWall;
 	public GameObject enemyPrefab1;
+	public GameObject player;
 
 	// The definitions of the wall
 	const int WALL = 1;
 	const int UNVISITED = -1;
 	const int FLOOR = 0;
 	const int DOOR = 2;
+	const int PRISONDOOR = 3;
+	const int PRISONWALL = 4;
 
 	//Level size
 	[SerializeField]
@@ -52,6 +57,8 @@ public class MazeGenerator : MonoBehaviour
 	int maxRoomSize = 8;
 	[SerializeField]
 	int amountOfRooms = 40;
+	[SerializeField]
+	int amountOfCells = 10;
 	List<Room> rooms = new List<Room>();
 	[SerializeField]
 	int enemiesPerRoom = 2;
@@ -95,7 +102,7 @@ public class MazeGenerator : MonoBehaviour
 		deadEnds = new Stack<Vector2>( width * height);
 		currentRegion = 0;
 		currentPos = previousPos = nextPos = new Vector2(0,0);
-		regionConnected = new int[amountOfRooms+1];
+		regionConnected = new int[amountOfRooms+amountOfCells+1];
 
 		for (int row = 0; row < height; row++)
 		{
@@ -221,20 +228,32 @@ public class MazeGenerator : MonoBehaviour
 						if (region [x + 1, y] != region [x - 1, y]) {
 							if (regionConnected [region [x + 1, y]] != 1 || regionConnected [region [x - 1, y]] != 1) {
 								//Debug.Log ("Made floor at x: " + x + " y: " + y);
-								maze [x, y] = DOOR;
+								if (region [x + 1, y] >= amountOfRooms || region [x - 1, y] >= amountOfRooms) {
+									maze [x, y] = PRISONDOOR;
+								} else {
+									maze [x, y] = DOOR;
+								}
 								regionConnected [region [x + 1, y]] = 1;
 								regionConnected [region [x - 1, y]] = 1;
 							} else {
 								var random = Random.Range (0, 10);
 								if (random < 1) {
-									maze [x, y] = DOOR;
+									if (region [x + 1, y] >= amountOfRooms || region [x - 1, y] >= amountOfRooms) {
+										maze [x, y] = PRISONDOOR;
+									} else {
+										maze [x, y] = DOOR;
+									}
 								}
 							}
 						}
 					} else if (maze [x, y + 1] == FLOOR && maze [x, y - 1] == FLOOR) {
 						if (region [x, y + 1] != region [x, y - 1]) {
 							if (regionConnected [region [x, y + 1]] != 1 || regionConnected [region [x, y - 1]] != 1) {
-								maze [x, y] = DOOR;
+								if (region [x, y+1] >= amountOfRooms || region [x, y - 1] >= amountOfRooms) {
+									maze [x, y] = PRISONDOOR;
+								} else {
+									maze [x, y] = DOOR;
+								}
 								regionConnected [region [x, y + 1]] = 1;
 								regionConnected [region [x, y - 1]] = 1;
 							}
@@ -383,6 +402,31 @@ public class MazeGenerator : MonoBehaviour
 				}
 			}
 		}
+		//Place cells randomly with a new region and sets enemies to 0 (we don't want any enemies in the cells)
+		for (int cell = 0; cell < amountOfCells; cell++) {
+			int cellWidth = 4;
+			int cellHeight = 4;
+			int x = Mathf.RoundToInt (Random.Range (0, width - cellWidth));
+			int y = Mathf.RoundToInt (Random.Range (0, height - cellHeight));
+
+			if (cell == 0) {
+				player.transform.position = new Vector2 (x+1, y+1);
+			}
+			currentRegion++;
+			for (int i = x; i < x + cellWidth; i++) {
+				for (int j = y; j < y + cellHeight; j++) {
+					if (i == x || i == x + cellWidth - 1 || j == y || j == y + cellHeight - 1) { //in first and last row and column place wall, unless it's already a region (which means there is a room overlap)
+						maze [i, j] = WALL;
+						region [i, j] = currentRegion;
+						enemies [i, j] = 0;
+					} else {
+						maze [i, j] = FLOOR;
+						region [i, j] = currentRegion;
+						enemies [i, j] = 0;
+					}
+				}
+			}
+		}
 	}
 
 	void visualise()
@@ -395,6 +439,10 @@ public class MazeGenerator : MonoBehaviour
 					var tempWall = Instantiate (wallTile, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == DOOR) {
 					var tempWall = Instantiate (doorTile, new Vector2 (x, y), Quaternion.identity);
+				} else if (maze [x, y] == PRISONDOOR) {
+					var tempWall = Instantiate (prisonDoor, new Vector2 (x, y), Quaternion.identity);
+				} else if (maze [x, y] == PRISONWALL) {
+					var tempWall = Instantiate (prisonWall, new Vector2 (x, y), Quaternion.identity);
 				}
 
 				if (enemies [x, y] == 1) {
