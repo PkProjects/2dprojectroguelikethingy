@@ -34,6 +34,7 @@ public class BaseEnemyScript : MonoBehaviour
     private float playerDistance;
     private bool followPlayer;
     public int type;
+	private bool isActive = false;
 
     // Use this for initialization
     void Start()
@@ -49,13 +50,18 @@ public class BaseEnemyScript : MonoBehaviour
 
     }
 
-
+	void OnTriggerEnter2D(Collider2D coll)
+	{
+		if (coll.gameObject.tag == "player") {
+			isActive = true;
+		}
+	}
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        
-        Vector3 forward = transform.TransformDirection(Vector3.down) * 10;
+		if (isActive) {
+			Vector3 forward = transform.TransformDirection (Vector3.down) * 10;
 
         hit = Physics2D.Raycast(gameObject.transform.position, forward, rayRange);
         longHit = Physics2D.Raycast(gameObject.transform.position, forward, longRayRange);
@@ -63,155 +69,136 @@ public class BaseEnemyScript : MonoBehaviour
         Debug.DrawRay(gameObject.transform.position, forward, Color.green);
         
 
-        if (hit.collider != null)
-        {
-            if (hit.collider.tag == "wall" || hit.collider.tag == "enemy" )
-            {
-                SwitchCase();
+			if (hit.collider != null) {
+				if (hit.collider.tag == "wall" || hit.collider.tag == "enemy") {
+					SwitchCase ();
                 
-            }
+				}
             
             
-        }
+			}
 
-        if (longHit.collider != null)
-        {
-            if (longHit.collider.tag == "player")
-            {
-                playerDistance = Vector3.Distance(this.transform.position, player.transform.position);
-                Debug.Log(playerDistance = Vector3.Distance(this.transform.position, player.transform.position));
+			if (longHit.collider != null) {
+				if (longHit.collider.tag == "player") {
+					playerDistance = Vector3.Distance (this.transform.position, player.transform.position);
+					Debug.Log (playerDistance = Vector3.Distance (this.transform.position, player.transform.position));
 
-                if (playerDistance >= 1)
-                {
-                    followPlayer = true;
-                    Debug.Log("IS this working");
-                }
-                else if (playerDistance < 1)
-                {
-                    followPlayer = false;
-                    Debug.Log("IS this working2");
-                }
-            }
-        }
+					if (playerDistance >= 1) {
+						followPlayer = true;
+						Debug.Log ("IS this working");
+					} else if (playerDistance < 1) {
+						followPlayer = false;
+						Debug.Log ("IS this working2");
+					}
+				}
+			}
+		
 
 
+			Vector3 difference = gameObject.transform.position - player.transform.position;
 
-            Vector3 difference = gameObject.transform.position - player.transform.position;
+			if (difference.magnitude < activationRadius) {
+				Vector3 dir = gameObject.transform.position - player.transform.position;
+				float angle = Mathf.Atan2 (dir.y, dir.x) * Mathf.Rad2Deg;
+				transform.rotation = Quaternion.AngleAxis (angle - 90f, Vector3.forward);
+				sprite.flipY = false;
+				patrol = false;
 
-        if (difference.magnitude < activationRadius)
-        {
-            Vector3 dir = gameObject.transform.position - player.transform.position;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
-            sprite.flipY = false;
-            patrol = false;
-
-            if (followPlayer == true)
-            {
-                this.transform.Translate(-dir * speed);
+				if (followPlayer == true) {
+					this.transform.Translate (-dir * speed);
                 
-            }
+				}
 
-            updateCount++;
+				updateCount++;
 
-            if (updateCount >= 100)
-            {
-                updateCount = 0;
-                readyShot = true;
-            }
+				if (updateCount >= 100) {
+					updateCount = 0;
+					readyShot = true;
+				}
 
-            if (readyShot == true)
-            {
+				if (readyShot == true) {
 
-                GameObject instBullet = Instantiate(bullet, shootLoc.transform.position, gameObject.transform.rotation) as GameObject;
-                instBullet.GetComponent<ProjectileScript>().velocity = new Vector3(0, -1f * bulletSpeed, 0);
-                readyShot = false;
-            }
+					GameObject instBullet = Instantiate (bullet, shootLoc.transform.position, gameObject.transform.rotation) as GameObject;
+					instBullet.GetComponent<ProjectileScript> ().velocity = new Vector3 (0, -1f * bulletSpeed, 0);
+					readyShot = false;
+				}
 
 
 
-        }
+			} else {
+				patrol = true;
+			}
 
-        else
-        {
-            patrol = true;
-        }
+			if (patrol == true) {
 
-        if (patrol == true)
-        {
-
-            switch (caseNr)
-            {
-                case 0: //Walk up
-                    gameObject.transform.Translate(new Vector2(0, -1) * speed);
-                    sprite.transform.rotation = (Quaternion.AngleAxis(180, Vector3.forward));
-                                        break;
+				switch (caseNr) {
+				case 0: //Walk up
+					gameObject.transform.Translate (new Vector2 (0, -1) * speed);
+					sprite.transform.rotation = (Quaternion.AngleAxis (180, Vector3.forward));
+					break;
 
 
-                case 1: //Walk down
-                    gameObject.transform.Translate(new Vector2(0, -1) * speed);
-                    sprite.transform.rotation = (Quaternion.AngleAxis(0, Vector3.forward));
-                                       break;
+				case 1: //Walk down
+					gameObject.transform.Translate (new Vector2 (0, -1) * speed);
+					sprite.transform.rotation = (Quaternion.AngleAxis (0, Vector3.forward));
+					break;
 
 
 
-                case 2: //Walk up left
-                    gameObject.transform.Translate(new Vector2(0, -1) * speed);
-                    sprite.transform.rotation = (Quaternion.AngleAxis(225, Vector3.forward));
+				case 2: //Walk up left
+					gameObject.transform.Translate (new Vector2 (0, -1) * speed);
+					sprite.transform.rotation = (Quaternion.AngleAxis (225, Vector3.forward));
                     
-                    break;
+					break;
 
-                case 3: //Walk up right
-                    gameObject.transform.Translate(new Vector2(0, -1) * speed);
-                    sprite.transform.rotation = (Quaternion.AngleAxis(135, Vector3.forward));
+				case 3: //Walk up right
+					gameObject.transform.Translate (new Vector2 (0, -1) * speed);
+					sprite.transform.rotation = (Quaternion.AngleAxis (135, Vector3.forward));
                     
-                    break;
+					break;
 
 
-                case 4: //Walk down right
-                    gameObject.transform.Translate(new Vector2(0, -1) * speed);
-                    sprite.transform.rotation = (Quaternion.AngleAxis(45, Vector3.forward));
+				case 4: //Walk down right
+					gameObject.transform.Translate (new Vector2 (0, -1) * speed);
+					sprite.transform.rotation = (Quaternion.AngleAxis (45, Vector3.forward));
                     
-                    break;
+					break;
 
-                case 5: //Walk down left
-                    gameObject.transform.Translate(new Vector2(0, -1) * speed);
-                    sprite.transform.rotation = (Quaternion.AngleAxis(315, Vector3.forward));
+				case 5: //Walk down left
+					gameObject.transform.Translate (new Vector2 (0, -1) * speed);
+					sprite.transform.rotation = (Quaternion.AngleAxis (315, Vector3.forward));
                     
-                    break;
+					break;
 
-                case 6: //Walk right
-                    gameObject.transform.Translate(new Vector2(0, -1) * speed);
-                    sprite.transform.rotation = (Quaternion.AngleAxis(90, Vector3.forward));
+				case 6: //Walk right
+					gameObject.transform.Translate (new Vector2 (0, -1) * speed);
+					sprite.transform.rotation = (Quaternion.AngleAxis (90, Vector3.forward));
                     
-                    break;
+					break;
 
-                case 7: //Walk left
-                    gameObject.transform.Translate(new Vector2(0, -1) * speed);
-                    sprite.transform.rotation = (Quaternion.AngleAxis(270, Vector3.forward));
+				case 7: //Walk left
+					gameObject.transform.Translate (new Vector2 (0, -1) * speed);
+					sprite.transform.rotation = (Quaternion.AngleAxis (270, Vector3.forward));
                     
-                    break;
+					break;
 
-            }
+				}
 
            
 
-            if (steps < walkRange)
-            {
-                steps++;
+				if (steps < walkRange) {
+					steps++;
 
-            }
-            else
-            {
-                SwitchCase();
-                steps = 0;
-            }
-        }
+				} else {
+					SwitchCase ();
+					steps = 0;
+				}
+			}
 
-        if (health <= 0)
-        {
-            Destroy(this.gameObject);
-        }
+			if (health <= 0) {
+				Destroy (this.gameObject);
+			}
+		}
 
     }
 
