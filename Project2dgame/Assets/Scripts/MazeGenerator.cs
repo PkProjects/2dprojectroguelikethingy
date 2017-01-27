@@ -16,6 +16,7 @@ public class MazeGenerator : MonoBehaviour
 	public GameObject prisonDoor;
 	public GameObject prisonWall;
 	public GameObject enemyPrefab1;
+	public GameObject prisonerPrefab;
 	public GameObject player;
 	public GameObject elevatorDoor;
 	public GameObject elevatorFloor;
@@ -443,6 +444,7 @@ public class MazeGenerator : MonoBehaviour
 		}
 		//Place cells randomly with a new region and sets enemies to 0 (we don't want any enemies in the cells or walls)
 		for (int cell = 0; cell < amountOfCells; cell++) {
+			int prisonerCount = 0;
 			int cellWidth = 4;
 			int cellHeight = 4;
 			int x = Mathf.RoundToInt (Random.Range (0, width - cellWidth));
@@ -461,7 +463,16 @@ public class MazeGenerator : MonoBehaviour
 					} else {
 						maze [i, j] = FLOOR;
 						region [i, j] = currentRegion;
-						enemies [i, j] = 0;
+						if (prisonerCount < 1) {
+							if (currentFloor == 0 && cell == 0) {
+								//don't place a prisoner in the starting cell, that's the player!
+							} else {
+								enemies [i, j] = 2;
+								prisonerCount++;
+							}
+						} else {
+							enemies [i, j] = 0;
+						}
 					}
 				}
 			}
@@ -490,6 +501,9 @@ public class MazeGenerator : MonoBehaviour
 
 				if (enemies [x, y] == 1) {
 					Instantiate (enemyPrefab1, new Vector2(x,y), Quaternion.identity);
+				}
+				if (enemies [x, y] == 2) {
+					Instantiate (prisonerPrefab, new Vector2(x,y), Quaternion.identity);
 				}
 			}
 		}
