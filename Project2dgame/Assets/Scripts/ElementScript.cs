@@ -16,7 +16,7 @@ public class ElementScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        this.gameObject.AddComponent<Rigidbody2D>();
         origin = this.transform.position;
 
     }
@@ -37,15 +37,25 @@ public class ElementScript : MonoBehaviour
             else
             {
                 collision.collider.GetComponent<BaseEnemyScript>().health -= 10;
-                Destroy(this.gameObject);
+                
             }
-           
         }
 
-        if (collision.collider.tag == "wall")
+        if (collision.collider.tag == "prisoner")
         {
-            Destroy(this.gameObject);
+            if (collision.collider.GetComponent<PrisonerScript>().type == eType)
+            {
+                collision.collider.GetComponent<PrisonerScript>().health -= 5;
+            }
+
+            else
+            {
+                collision.collider.GetComponent<PrisonerScript>().health -= 10;
+
+            }
         }
+
+
 
     }
 

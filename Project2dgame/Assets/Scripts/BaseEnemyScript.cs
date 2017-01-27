@@ -57,6 +57,16 @@ public class BaseEnemyScript : MonoBehaviour
 		}
 	}
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "player")
+        {
+            isActive = false;
+        }
+    }
+
+
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -64,7 +74,7 @@ public class BaseEnemyScript : MonoBehaviour
 			Vector3 forward = transform.TransformDirection (Vector3.down) * 10;
 
         hit = Physics2D.Raycast(gameObject.transform.position, forward, rayRange);
-        longHit = Physics2D.Raycast(gameObject.transform.position, forward, longRayRange);
+       
 
         Debug.DrawRay(gameObject.transform.position, forward, Color.green);
         
@@ -72,58 +82,69 @@ public class BaseEnemyScript : MonoBehaviour
 			if (hit.collider != null) {
 				if (hit.collider.tag == "wall" || hit.collider.tag == "enemy") {
 					SwitchCase ();
-                
 				}
-            
-            
 			}
 
 			if (longHit.collider != null) {
 				if (longHit.collider.tag == "player") {
 					playerDistance = Vector3.Distance (this.transform.position, player.transform.position);
-					//Debug.Log (playerDistance = Vector3.Distance (this.transform.position, player.transform.position));
-
+					
 					if (playerDistance >= 1) {
 						followPlayer = true;
-						//Debug.Log ("IS this working");
+						
 					} else if (playerDistance < 1) {
 						followPlayer = false;
-						//Debug.Log ("IS this working2");
+						
 					}
 				}
 			}
-		
-
 
 			Vector3 difference = gameObject.transform.position - player.transform.position;
 
 			if (difference.magnitude < activationRadius) {
-				Vector3 dir = gameObject.transform.position - player.transform.position;
-				float angle = Mathf.Atan2 (dir.y, dir.x) * Mathf.Rad2Deg;
-				transform.rotation = Quaternion.AngleAxis (angle - 90f, Vector3.forward);
-				sprite.flipY = false;
-				patrol = false;
-
-				if (followPlayer == true) {
-					this.transform.Translate (-dir * speed);
+                longHit = Physics2D.Raycast(gameObject.transform.position, forward, longRayRange);
                 
-				}
 
-				updateCount++;
-
-				if (updateCount >= 100) {
-					updateCount = 0;
-					readyShot = true;
-				}
-
-				if (readyShot == true) {
-
-					GameObject instBullet = Instantiate (bullet, shootLoc.transform.position, gameObject.transform.rotation) as GameObject;
-					instBullet.GetComponent<ProjectileScript> ().velocity = new Vector3 (0, -1f * bulletSpeed, 0);
-					readyShot = false;
-				}
+                if (longHit.collider != null)
+                {
+                    
+                    if (longHit.collider.tag == "player")
+                    {
+                        Vector3 dir = gameObject.transform.position - player.transform.position;
+                        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                        transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
+                        sprite.flipY = false;
+                        patrol = false;
 
 
+                        if (followPlayer == true)
+                        {
+                            this.transform.Translate(-dir * speed);
+                        }
+
+                        updateCount++;
+
+                        if (updateCount >= 100)
+                        {
+                            updateCount = 0;
+                            readyShot = true;
+                        }
+
+                        if (readyShot == true)
+                        {
+                            GameObject instBullet = Instantiate(bullet, shootLoc.transform.position, gameObject.transform.rotation) as GameObject;
+                            instBullet.GetComponent<ProjectileScript>().velocity = new Vector3(0, -1f * bulletSpeed, 0);
+                            readyShot = false;
+                        }
+                    }
+                }
+
+                if(longHit.collider == false)
+                {
+                    patrol = true;
+                }
+               
+             
 
 			} else {
 				patrol = true;

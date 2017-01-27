@@ -121,7 +121,7 @@ public class MazeGenerator : MonoBehaviour
 
 	void checkConnections()
 	{
-		Debug.Log ("Rebuilding level");
+		//Debug.Log ("Rebuilding level");
 		for (int i = 0; i < regionConnected.Length - 1; i++) {
 			if (regionConnected [i] == 0) {
 				buildDungeon ();

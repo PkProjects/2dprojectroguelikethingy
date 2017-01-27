@@ -50,22 +50,8 @@ public class SpawnScript : MonoBehaviour {
         GameObject instEnemy = Instantiate(enemyPrefab, this.transform.position, this.transform.rotation) as GameObject;
         instEnemy.GetComponent<BaseEnemyScript>().type = enemyType;
 
-        Debug.Log("Spawned");
+
 
     }
 	
-	// Update is called once per frame
-	void Update () {
-
-        timer++;
-
-       
-
-        if(timer >= spawnTime)
-        {
-           
-            timer = 0;
-        }
-		
-	}
 }
