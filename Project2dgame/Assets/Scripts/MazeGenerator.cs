@@ -17,6 +17,8 @@ public class MazeGenerator : MonoBehaviour
 	public GameObject prisonWall;
 	public GameObject enemyPrefab1;
 	public GameObject player;
+	public GameObject elevatorDoor;
+	public GameObject elevatorFloor;
 
 	// The definitions of the wall
 	const int WALL = 1;
@@ -25,6 +27,8 @@ public class MazeGenerator : MonoBehaviour
 	const int DOOR = 2;
 	const int PRISONDOOR = 3;
 	const int PRISONWALL = 4;
+	const int ELEVATORFLOOR = 5;
+	const int ELEVATORDOOR = 6;
 
 	//Level size
 	[SerializeField]
@@ -37,6 +41,7 @@ public class MazeGenerator : MonoBehaviour
 	int[,] region;
 	int[,] enemies;
 	int currentRegion;
+	int elevatorRegion;
 	int[] regionConnected; // 0 is unconnected, 1 is connected
 	Vector2 currentPos; 
 	Vector2 nextPos;
@@ -63,6 +68,8 @@ public class MazeGenerator : MonoBehaviour
 	[SerializeField]
 	int enemiesPerRoom = 2;
 
+	//Tracks which floor the player is currently on
+	int currentFloor = 0;
 
 	/// <summary>
 	/// Start this generation of the maze.
@@ -101,8 +108,9 @@ public class MazeGenerator : MonoBehaviour
 		freePositions = new Stack<Vector2>( width * height);
 		deadEnds = new Stack<Vector2>( width * height);
 		currentRegion = 0;
+		elevatorRegion = amountOfRooms + amountOfCells + 1;
 		currentPos = previousPos = nextPos = new Vector2(0,0);
-		regionConnected = new int[amountOfRooms+amountOfCells+1];
+		regionConnected = new int[amountOfRooms+amountOfCells+3];
 
 		for (int row = 0; row < height; row++)
 		{
@@ -180,22 +188,22 @@ public class MazeGenerator : MonoBehaviour
 				int wallCount = 0;
 				int currentX = (int)deadEnd.x;
 				int currentY = (int)deadEnd.y;
-				if (maze [currentX + 1, currentY] == WALL) { 
+				if (maze [currentX + 1, currentY] == WALL || maze [currentX + 1, currentY] == PRISONWALL) { 
 					wallCount++;
 				} else {
 					nextPos = new Vector2 (currentX + 1, currentY);
 				}
-				if (maze [currentX - 1, currentY] == WALL) { 
+				if (maze [currentX - 1, currentY] == WALL || maze [currentX - 1, currentY] == PRISONWALL ) { 
 					wallCount++;
 				} else {
 					nextPos = new Vector2 (currentX - 1, currentY);
 				}
-				if (maze [currentX, currentY + 1] == WALL) { 
+				if (maze [currentX, currentY + 1] == WALL || maze [currentX, currentY + 1] == PRISONWALL) { 
 					wallCount++;
 				} else {
 					nextPos = new Vector2 (currentX, currentY + 1);
 				}
-				if (maze [currentX, currentY - 1] == WALL) { 
+				if (maze [currentX, currentY - 1] == WALL || maze [currentX, currentY - 1] == PRISONWALL) { 
 					wallCount++;
 				} else {
 					nextPos = new Vector2 (currentX, currentY - 1);
@@ -219,17 +227,20 @@ public class MazeGenerator : MonoBehaviour
 	// This will also turn any unvisited tile into a wall tile
 	void connectRegions()
 	{
+		elevatorRegion = amountOfRooms + amountOfCells + 1;
 		for (int x = 1; x < height - 1; x++)
 		{
 			for (int y = 1; y < width - 1; y++)
 			{
-				if (maze [x, y] == WALL ) {
-					if (maze [x + 1, y] == FLOOR && maze [x - 1, y] == FLOOR) {
+				if (maze [x, y] == WALL || maze [x, y] == PRISONWALL ) {
+					if ( (maze [x + 1, y] == FLOOR || maze [x + 1, y] == ELEVATORFLOOR) && (maze [x - 1, y] == FLOOR || maze [x - 1, y] == ELEVATORFLOOR)) {
 						if (region [x + 1, y] != region [x - 1, y]) {
 							if (regionConnected [region [x + 1, y]] != 1 || regionConnected [region [x - 1, y]] != 1) {
 								//Debug.Log ("Made floor at x: " + x + " y: " + y);
-								if (region [x + 1, y] >= amountOfRooms || region [x - 1, y] >= amountOfRooms) {
+								if ( (elevatorRegion > region [x + 1, y] && region [x + 1, y] >= amountOfRooms) || ( elevatorRegion > region [x - 1, y] && region [x - 1, y] >= amountOfRooms)) {
 									maze [x, y] = PRISONDOOR;
+								} else if (region [x + 1, y] >= elevatorRegion || region [x - 1, y] >= elevatorRegion) {
+									maze [x, y] = ELEVATORDOOR;
 								} else {
 									maze [x, y] = DOOR;
 								}
@@ -238,19 +249,23 @@ public class MazeGenerator : MonoBehaviour
 							} else {
 								var random = Random.Range (0, 10);
 								if (random < 1) {
-									if (region [x + 1, y] >= amountOfRooms || region [x - 1, y] >= amountOfRooms) {
+									if ( (elevatorRegion > region [x + 1, y] && region [x + 1, y] >= amountOfRooms) || (elevatorRegion > region [x - 1, y] && region [x - 1, y] >= amountOfRooms)) {
 										maze [x, y] = PRISONDOOR;
+									} else if (region [x + 1, y] >= elevatorRegion || region [x - 1, y] >= elevatorRegion) {
+										maze [x, y] = ELEVATORDOOR;
 									} else {
 										maze [x, y] = DOOR;
 									}
 								}
 							}
 						}
-					} else if (maze [x, y + 1] == FLOOR && maze [x, y - 1] == FLOOR) {
+					} else if ( (maze [x, y + 1] == FLOOR || maze [x, y + 1] == ELEVATORFLOOR) && (maze [x, y - 1] == FLOOR || maze [x, y - 1] == ELEVATORFLOOR )) {
 						if (region [x, y + 1] != region [x, y - 1]) {
 							if (regionConnected [region [x, y + 1]] != 1 || regionConnected [region [x, y - 1]] != 1) {
-								if (region [x, y+1] >= amountOfRooms || region [x, y - 1] >= amountOfRooms) {
+								if ( (elevatorRegion > region [x, y+1] && region [x, y+1] >= amountOfRooms) || (elevatorRegion > region [x, y - 1] && region [x, y - 1] >= amountOfRooms)) {
 									maze [x, y] = PRISONDOOR;
+								} else if (region [x, y+1] >= elevatorRegion || region [x, y - 1] >= elevatorRegion) {
+									maze [x, y] = ELEVATORDOOR;
 								} else {
 									maze [x, y] = DOOR;
 								}
@@ -402,21 +417,45 @@ public class MazeGenerator : MonoBehaviour
 				}
 			}
 		}
-		//Place cells randomly with a new region and sets enemies to 0 (we don't want any enemies in the cells)
+		//Place 1(first floor) or 2 elevators randomly with the ELEVATOR region and sets enemies to 0 (we don't want any enemies in the elevator or walls)
+		for (int elevator = 0; elevator < Mathf.Min(currentFloor + 1, 2); elevator++) {
+			int elevatorWidth = 4;
+			int elevatorHeight = 4;
+			int x = Mathf.RoundToInt (Random.Range (0, width - elevatorWidth));
+			int y = Mathf.RoundToInt (Random.Range (0, height - elevatorHeight));
+			if (currentFloor != 0) {
+				player.transform.position = new Vector2 (x+1, y+1);
+			}
+			for (int i = x; i < x + elevatorWidth; i++) {
+				for (int j = y; j < y + elevatorHeight; j++) {
+					if (i == x || i == x + elevatorWidth - 1 || j == y || j == y + elevatorHeight - 1) { //in first and last row and column place wall
+						maze [i, j] = WALL;
+						region [i, j] = elevatorRegion;
+						enemies [i, j] = 0;
+					} else {
+						maze [i, j] = ELEVATORFLOOR;
+						region [i, j] = elevatorRegion;
+						enemies [i, j] = 0;
+					}
+				}
+			}
+			elevatorRegion++;
+		}
+		//Place cells randomly with a new region and sets enemies to 0 (we don't want any enemies in the cells or walls)
 		for (int cell = 0; cell < amountOfCells; cell++) {
 			int cellWidth = 4;
 			int cellHeight = 4;
 			int x = Mathf.RoundToInt (Random.Range (0, width - cellWidth));
 			int y = Mathf.RoundToInt (Random.Range (0, height - cellHeight));
 
-			if (cell == 0) {
+			if (currentFloor == 0 && cell == 0) {
 				player.transform.position = new Vector2 (x+1, y+1);
 			}
 			currentRegion++;
 			for (int i = x; i < x + cellWidth; i++) {
 				for (int j = y; j < y + cellHeight; j++) {
-					if (i == x || i == x + cellWidth - 1 || j == y || j == y + cellHeight - 1) { //in first and last row and column place wall, unless it's already a region (which means there is a room overlap)
-						maze [i, j] = WALL;
+					if (i == x || i == x + cellWidth - 1 || j == y || j == y + cellHeight - 1) { //in first and last row and column place wall
+						maze [i, j] = PRISONWALL;
 						region [i, j] = currentRegion;
 						enemies [i, j] = 0;
 					} else {
@@ -434,24 +473,24 @@ public class MazeGenerator : MonoBehaviour
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				if (maze [x, y] == FLOOR) {
-					var tempFloor = Instantiate (floorTile, new Vector2 (x, y), Quaternion.identity);
+					Instantiate (floorTile, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == WALL) {
-					var tempWall = Instantiate (wallTile, new Vector2 (x, y), Quaternion.identity);
+					Instantiate (wallTile, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == DOOR) {
-					var tempWall = Instantiate (doorTile, new Vector2 (x, y), Quaternion.identity);
+					Instantiate (doorTile, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == PRISONDOOR) {
-					var tempWall = Instantiate (prisonDoor, new Vector2 (x, y), Quaternion.identity);
+					Instantiate (prisonDoor, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == PRISONWALL) {
-					var tempWall = Instantiate (prisonWall, new Vector2 (x, y), Quaternion.identity);
+					Instantiate (prisonWall, new Vector2 (x, y), Quaternion.identity);
+				} else if (maze [x, y] == ELEVATORDOOR) {
+					Instantiate (elevatorDoor, new Vector2 (x, y), Quaternion.identity);
+				} else if (maze [x, y] == ELEVATORFLOOR) {
+					Instantiate (elevatorFloor, new Vector2 (x, y), Quaternion.identity);
 				}
 
 				if (enemies [x, y] == 1) {
-					var tempEnemy = Instantiate (enemyPrefab1, new Vector2(x,y), Quaternion.identity);
-				}/* else if (maze [x, y] == WALL) {
-					var tempWall = Instantiate (wallTile, new Vector2(x,y), Quaternion.identity);
-				} else if (maze [x, y] == DOOR) {
-					var tempWall = Instantiate (doorTile, new Vector2(x,y), Quaternion.identity);
-				}*/
+					Instantiate (enemyPrefab1, new Vector2(x,y), Quaternion.identity);
+				}
 			}
 		}
 	}
