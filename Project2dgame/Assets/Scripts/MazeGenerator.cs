@@ -20,9 +20,19 @@ public class MazeGenerator : MonoBehaviour
 	public GameObject player;
 	public GameObject elevatorDoor;
 	public GameObject elevatorFloor;
+	public GameObject horiWall;
+	public GameObject vertWall;
+	public GameObject botLeftWall;
+	public GameObject botRightWall;
+	public GameObject topLeftWall;
+	public GameObject topRightWall;
+	public GameObject topStopWall;
+	public GameObject botStopWall;
+	public GameObject leftStopWall;
+	public GameObject rightStopWall;
 
 	// The definitions of the wall
-	const int WALL = 1;
+	const int WALL = 9;
 	const int UNVISITED = -1;
 	const int FLOOR = 0;
 	const int DOOR = 2;
@@ -30,6 +40,17 @@ public class MazeGenerator : MonoBehaviour
 	const int PRISONWALL = 4;
 	const int ELEVATORFLOOR = 5;
 	const int ELEVATORDOOR = 6;
+
+	const int STRAIGHTHORI = 10;
+	const int STRAIGHTVERT = 11;
+	const int BOTTOMLEFT = 12;
+	const int BOTTOMRIGHT = 13;
+	const int TOPLEFT = 14;
+	const int TOPRIGHT = 15;
+	const int BOTTOMSTOP = 16;
+	const int LEFTSTOP = 17;
+	const int RIGHTSTOP = 18;
+	const int TOPSTOP = 19;
 
 	//Level size
 	[SerializeField]
@@ -94,6 +115,7 @@ public class MazeGenerator : MonoBehaviour
 		if (loopUntillConnected) {
 			checkConnections ();
 		}
+		fixWalls ();
 	}
 
 	/// <summary>
@@ -179,6 +201,90 @@ public class MazeGenerator : MonoBehaviour
 		}
 	}
 
+	//Loop through everything to fix the walls
+	void fixWalls()
+	{
+		for (int currentX = 1; currentX < height - 1; currentX++)
+		{
+			for (int currentY = 1; currentY < width - 1; currentY++)
+			{
+				if (maze [currentX, currentY] >= WALL) {
+				} else {
+					continue;
+				}
+				int wallCount = 0;
+				bool upWall = false;
+				bool downWall = false;
+				bool leftWall = false;
+				bool rightWall = false;
+				if (maze [currentX + 1, currentY] >= WALL || maze [currentX + 1, currentY] == PRISONWALL) { 
+					wallCount++;
+					rightWall = true;
+				} 
+				if (maze [currentX - 1, currentY] >= WALL || maze [currentX - 1, currentY] == PRISONWALL ) { 
+					wallCount++;
+					leftWall = true;
+				} 
+				if (maze [currentX, currentY + 1] >= WALL || maze [currentX, currentY + 1] == PRISONWALL) { 
+					wallCount++;
+					upWall = true;
+				} 
+				if (maze [currentX, currentY - 1] >= WALL || maze [currentX, currentY - 1] == PRISONWALL) { 
+					wallCount++;
+					downWall = true;
+				} 
+				if (wallCount > 3 || wallCount == 0) {
+					maze [currentX, currentY] = WALL;	
+				} else if (wallCount > 2) {
+					if (!upWall) {
+						maze [currentX, currentY] = STRAIGHTHORI;	
+					}
+					if (!rightWall) {
+						maze [currentX, currentY] = STRAIGHTVERT;	
+					}
+					if (!leftWall) {
+						maze [currentX, currentY] = STRAIGHTVERT;	
+					}
+					if (!downWall) {
+						maze [currentX, currentY] = STRAIGHTHORI;	
+					}
+				} else if (wallCount > 1) {
+						if (upWall && rightWall) {
+							maze [currentX, currentY] = BOTTOMLEFT;	
+						}
+						if (upWall && leftWall) {
+							maze [currentX, currentY] = BOTTOMRIGHT;	
+						}
+						if (upWall && downWall) {
+							maze [currentX, currentY] = STRAIGHTVERT;	
+						}
+						if (leftWall && rightWall) {
+							maze [currentX, currentY] = STRAIGHTHORI;	
+						}
+						if (downWall && rightWall) {
+							maze [currentX, currentY] = TOPLEFT;	
+						}
+						if (downWall && leftWall) {
+							maze [currentX, currentY] = TOPRIGHT;	
+						}
+				} else if (wallCount == 1) {
+						if (upWall) {
+							maze [currentX, currentY] = BOTTOMSTOP;	
+						}
+						if (rightWall) {
+							maze [currentX, currentY] = LEFTSTOP;	
+						}
+						if (leftWall) {
+							maze [currentX, currentY] = RIGHTSTOP;	
+						}
+						if (downWall) {
+							maze [currentX, currentY] = TOPSTOP;	
+						}
+				}
+			}
+		}
+	}
+
 	// Get dead end from a stack, and checks if there are 3 walls around position, if so, it's a dead end so fill it up
 	void removeDeadEnds()
 	{
@@ -189,22 +295,22 @@ public class MazeGenerator : MonoBehaviour
 				int wallCount = 0;
 				int currentX = (int)deadEnd.x;
 				int currentY = (int)deadEnd.y;
-				if (maze [currentX + 1, currentY] == WALL || maze [currentX + 1, currentY] == PRISONWALL) { 
+				if (maze [currentX + 1, currentY] >= WALL || maze [currentX + 1, currentY] == PRISONWALL) { 
 					wallCount++;
 				} else {
 					nextPos = new Vector2 (currentX + 1, currentY);
 				}
-				if (maze [currentX - 1, currentY] == WALL || maze [currentX - 1, currentY] == PRISONWALL ) { 
+				if (maze [currentX - 1, currentY] >= WALL || maze [currentX - 1, currentY] == PRISONWALL ) { 
 					wallCount++;
 				} else {
 					nextPos = new Vector2 (currentX - 1, currentY);
 				}
-				if (maze [currentX, currentY + 1] == WALL || maze [currentX, currentY + 1] == PRISONWALL) { 
+				if (maze [currentX, currentY + 1] >= WALL || maze [currentX, currentY + 1] == PRISONWALL) { 
 					wallCount++;
 				} else {
 					nextPos = new Vector2 (currentX, currentY + 1);
 				}
-				if (maze [currentX, currentY - 1] == WALL || maze [currentX, currentY - 1] == PRISONWALL) { 
+				if (maze [currentX, currentY - 1] >= WALL || maze [currentX, currentY - 1] == PRISONWALL) { 
 					wallCount++;
 				} else {
 					nextPos = new Vector2 (currentX, currentY - 1);
@@ -348,25 +454,61 @@ public class MazeGenerator : MonoBehaviour
 				var random = Mathf.Min (neighbours.Count, randomness);
 				int direction = Mathf.RoundToInt (Random.Range (0, random));
 				nextPos = neighbours [direction];
-				if (nextPos - currentPos == new Vector2 (1, 0) || nextPos - currentPos == new Vector2 (-1, 0)) {
+				if (nextPos - currentPos == new Vector2 (1, 0)) { //next tile is to the right
 					if (maze [currentX, currentY + 1] == UNVISITED) {
-						maze [currentX, currentY + 1] = WALL;
+						maze [currentX, currentY + 1] = STRAIGHTHORI;
 						neighbours.Remove (new Vector2 (currentX, currentY + 1));
+					} else if (maze [currentX, currentY + 1] == STRAIGHTVERT) {
+						maze [currentX, currentY + 1] = BOTTOMLEFT;
 					}
 					if (maze [currentX, currentY - 1] == UNVISITED) {
-						maze [currentX, currentY - 1] = WALL;
+						maze [currentX, currentY - 1] = STRAIGHTHORI;
 						neighbours.Remove (new Vector2 (currentX, currentY - 1));
+					 }else if (maze [currentX, currentY - 1] == STRAIGHTVERT) {
+						maze [currentX, currentY - 1] = TOPLEFT;
 					}
-				} else if (nextPos - currentPos == new Vector2 (0, 1) || nextPos - currentPos == new Vector2 (0, -1)) {
+				} else if (nextPos - currentPos == new Vector2 (0, 1)) { // next tile is up
 					if (maze [currentX + 1, currentY] == UNVISITED) {
-						maze [currentX + 1, currentY] = WALL;
-						neighbours.Remove (new Vector2 (currentX +1, currentY));
+						maze [currentX + 1, currentY] = STRAIGHTVERT;
+						neighbours.Remove (new Vector2 (currentX + 1, currentY));
+					} else if (maze [currentX + 1, currentY] == STRAIGHTHORI) {
+						maze [currentX + 1, currentY] = BOTTOMLEFT;
 					}
 					if (maze [currentX - 1, currentY] == UNVISITED) {
-						maze [currentX - 1, currentY] = WALL;
-						neighbours.Remove (new Vector2 (currentX -1, currentY));
+						maze [currentX - 1, currentY] = STRAIGHTVERT;
+						neighbours.Remove (new Vector2 (currentX - 1, currentY));
+					} else if (maze [currentX - 1, currentY] == STRAIGHTHORI) {
+						maze [currentX - 1, currentY] = BOTTOMRIGHT;
+					}
+				} else if (nextPos - currentPos == new Vector2 (-1, 0)) { // next tile is left
+					if (maze [currentX, currentY + 1] == UNVISITED) {
+						maze [currentX, currentY + 1] = STRAIGHTHORI;
+						neighbours.Remove (new Vector2 (currentX, currentY + 1));
+					} else if (maze [currentX, currentY + 1] == STRAIGHTVERT) {
+						maze [currentX, currentY + 1] = BOTTOMRIGHT;
+					}
+					if (maze [currentX, currentY - 1] == UNVISITED) {
+						maze [currentX, currentY - 1] = STRAIGHTHORI;
+						neighbours.Remove (new Vector2 (currentX, currentY - 1));
+					}else if (maze [currentX, currentY - 1] == STRAIGHTVERT) {
+						maze [currentX, currentY - 1] = TOPRIGHT;
+					}
+				} else if (nextPos - currentPos == new Vector2 (0, -1)) { //next tile is down
+					if (maze [currentX + 1, currentY] == UNVISITED) {
+						maze [currentX + 1, currentY] = STRAIGHTVERT;
+						neighbours.Remove (new Vector2 (currentX + 1, currentY));
+					} else if (maze [currentX + 1, currentY] == STRAIGHTHORI) {
+						maze [currentX + 1, currentY] = TOPLEFT;
+					}
+					if (maze [currentX - 1, currentY] == UNVISITED) {
+						maze [currentX - 1, currentY] = STRAIGHTVERT;
+						neighbours.Remove (new Vector2 (currentX - 1, currentY));
+					} else if (maze [currentX - 1, currentY] == STRAIGHTHORI) {
+						maze [currentX - 1, currentY] = TOPRIGHT;
 					}
 				}
+
+
 				foreach (Vector2 neighbour in neighbours) {
 					freePositions.Push (neighbour);
 				}
@@ -497,6 +639,26 @@ public class MazeGenerator : MonoBehaviour
 					Instantiate (elevatorDoor, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == ELEVATORFLOOR) {
 					Instantiate (elevatorFloor, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == STRAIGHTHORI) {
+					Instantiate (horiWall, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == STRAIGHTVERT) {
+					Instantiate (vertWall, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == BOTTOMLEFT) {
+					Instantiate (botLeftWall, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == BOTTOMRIGHT) {
+					Instantiate (botRightWall, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == TOPLEFT) {
+					Instantiate (topLeftWall, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == TOPRIGHT) {
+					Instantiate (topRightWall, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == BOTTOMSTOP) {
+					Instantiate (botStopWall, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == TOPSTOP) {
+					Instantiate (topStopWall, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == LEFTSTOP) {
+					Instantiate (leftStopWall, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == RIGHTSTOP) {
+					Instantiate (rightStopWall, new Vector2 (x, y), Quaternion.identity);
 				}
 
 				if (enemies [x, y] == 1) {
