@@ -21,14 +21,15 @@ public class ProjectileScript : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-       // Debug.Log("collision");
+        
+       //Debug.Log("collision");
         Destroy(gameObject);
 
 
         if (collision.collider.tag == "player")
         {
-            Destroy(gameObject);
             FindObjectOfType<playerScript>().health -= 10;
+            
         }
 
        

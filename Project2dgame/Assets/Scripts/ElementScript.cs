@@ -23,7 +23,7 @@ public class ElementScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Debug.Log("collision");
+        Debug.Log("collision");
        
         if (collision.collider.tag == "wall")
         {
@@ -37,12 +37,15 @@ public class ElementScript : MonoBehaviour
             if (collision.collider.GetComponent<BaseEnemyScript>().type == eType)
             {
                 collision.collider.GetComponent<BaseEnemyScript>().health -= 5;
+                Debug.Log(collision.collider.GetComponent<BaseEnemyScript>().health);
+                collision.collider.GetComponent<BaseEnemyScript>().hitDirection = -velocity;
             }
 
             else
             {
                 collision.collider.GetComponent<BaseEnemyScript>().health -= 10;
-                
+                Debug.Log(collision.collider.GetComponent<BaseEnemyScript>().health);
+
             }
         }
 

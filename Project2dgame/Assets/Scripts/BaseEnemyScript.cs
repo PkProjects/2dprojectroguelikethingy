@@ -19,6 +19,8 @@ public class BaseEnemyScript : MonoBehaviour
     private GameObject shootLoc;
     private bool switchDirection;
 
+    public Vector3 hitDirection;
+
     [Range(0.01f, 0.1f)]
     public float speed = 0.05f;
     [Range(0f, 10f)]
@@ -27,7 +29,7 @@ public class BaseEnemyScript : MonoBehaviour
     private Quaternion rotDir;
 
     private float rayRange =0.5f;
-    private float longRayRange = 6f;
+    private float longRayRange = 6;
     public RaycastHit2D hit;
     public RaycastHit2D longHit;
     public float distance;
@@ -50,7 +52,13 @@ public class BaseEnemyScript : MonoBehaviour
 
     }
 
-	void OnTriggerEnter2D(Collider2D coll)
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log(collision);
+        Debug.Log(hitDirection);
+    }
+
+    void OnTriggerEnter2D(Collider2D coll)
 	{
 		if (coll.gameObject.tag == "player") {
 			isActive = true;
@@ -81,7 +89,11 @@ public class BaseEnemyScript : MonoBehaviour
 
 			if (hit.collider != null) {
 				if (hit.collider.tag == "wall" || hit.collider.tag == "enemy") {
-					SwitchCase ();
+                    if (followPlayer == false)
+                    {
+                        
+                        SwitchCase();
+                    }
 				}
 			}
 
@@ -104,37 +116,42 @@ public class BaseEnemyScript : MonoBehaviour
 			if (difference.magnitude < activationRadius) {
                 longHit = Physics2D.Raycast(gameObject.transform.position, forward, longRayRange);
                 
-
+               
                 if (longHit.collider != null)
                 {
                     
-                    if (longHit.collider.tag == "player")
+                    if (longHit.collider.tag != "wall")
                     {
                         Vector3 dir = gameObject.transform.position - player.transform.position;
                         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
                         transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
                         sprite.flipY = false;
-                        patrol = false;
 
-
-                        if (followPlayer == true)
+                        if (longHit.collider.tag == "player")
                         {
-                            this.transform.Translate(-dir * speed);
-                        }
+                            
+                            patrol = false;
 
-                        updateCount++;
 
-                        if (updateCount >= 100)
-                        {
-                            updateCount = 0;
-                            readyShot = true;
-                        }
+                            if (followPlayer == true)
+                            {
+                                this.transform.Translate(-dir * speed);
+                            }
 
-                        if (readyShot == true)
-                        {
-                            GameObject instBullet = Instantiate(bullet, shootLoc.transform.position, gameObject.transform.rotation) as GameObject;
-                            instBullet.GetComponent<ProjectileScript>().velocity = new Vector3(0, -1f * bulletSpeed, 0);
-                            readyShot = false;
+                            updateCount++;
+
+                            if (updateCount >= 100)
+                            {
+                                updateCount = 0;
+                                readyShot = true;
+                            }
+
+                            if (readyShot == true)
+                            {
+                                GameObject instBullet = Instantiate(bullet, shootLoc.transform.position, gameObject.transform.rotation) as GameObject;
+                                instBullet.GetComponent<ProjectileScript>().velocity = new Vector3(0, -1f * bulletSpeed, 0);
+                                readyShot = false;
+                            }
                         }
                     }
                 }
