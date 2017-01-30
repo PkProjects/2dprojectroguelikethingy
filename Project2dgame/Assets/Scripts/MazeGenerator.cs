@@ -30,6 +30,10 @@ public class MazeGenerator : MonoBehaviour
 	public GameObject botStopWall;
 	public GameObject leftStopWall;
 	public GameObject rightStopWall;
+	public GameObject tWallUp;
+	public GameObject tWallDown;
+	public GameObject tWallLeft;
+	public GameObject tWallRight;
 
 	// The definitions of the wall
 	const int WALL = 9;
@@ -51,6 +55,10 @@ public class MazeGenerator : MonoBehaviour
 	const int LEFTSTOP = 17;
 	const int RIGHTSTOP = 18;
 	const int TOPSTOP = 19;
+	const int TSPLITUP = 20;
+	const int TSPLITDOWN = 21;
+	const int TSPLITLEFT = 22;
+	const int TSPLITRIGHT = 23;
 
 	//Level size
 	[SerializeField]
@@ -237,16 +245,16 @@ public class MazeGenerator : MonoBehaviour
 					maze [currentX, currentY] = WALL;	
 				} else if (wallCount > 2) {
 					if (!upWall) {
-						maze [currentX, currentY] = STRAIGHTHORI;	
+						maze [currentX, currentY] = TSPLITDOWN;	
 					}
 					if (!rightWall) {
-						maze [currentX, currentY] = STRAIGHTVERT;	
+						maze [currentX, currentY] = TSPLITLEFT;	
 					}
 					if (!leftWall) {
-						maze [currentX, currentY] = STRAIGHTVERT;	
+						maze [currentX, currentY] = TSPLITRIGHT;	
 					}
 					if (!downWall) {
-						maze [currentX, currentY] = STRAIGHTHORI;	
+						maze [currentX, currentY] = TSPLITUP;	
 					}
 				} else if (wallCount > 1) {
 						if (upWall && rightWall) {
@@ -659,6 +667,14 @@ public class MazeGenerator : MonoBehaviour
 					Instantiate (leftStopWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == RIGHTSTOP) {
 					Instantiate (rightStopWall, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == TSPLITUP) {
+					Instantiate (tWallUp, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == TSPLITDOWN) {
+					Instantiate (tWallDown, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == TSPLITLEFT) {
+					Instantiate (tWallLeft, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == TSPLITRIGHT) {
+					Instantiate (tWallRight, new Vector2 (x, y), Quaternion.identity);
 				}
 
 				if (enemies [x, y] == 1) {
