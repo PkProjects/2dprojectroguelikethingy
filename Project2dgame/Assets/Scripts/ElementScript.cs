@@ -24,11 +24,16 @@ public class ElementScript : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Debug.Log("collision");
-        Destroy(gameObject);
-        Debug.Log(collision.collider.tag);
+       
+        if (collision.collider.tag == "wall")
+        {
+            Destroy(gameObject);
+        }
 
         if (collision.collider.tag == "enemy")
         {
+            Destroy(gameObject);
+
             if (collision.collider.GetComponent<BaseEnemyScript>().type == eType)
             {
                 collision.collider.GetComponent<BaseEnemyScript>().health -= 5;
@@ -43,6 +48,7 @@ public class ElementScript : MonoBehaviour
 
         if (collision.collider.tag == "prisoner")
         {
+            Destroy(gameObject);
             if (collision.collider.GetComponent<PrisonerScript>().type == eType)
             {
                 collision.collider.GetComponent<PrisonerScript>().health -= 5;

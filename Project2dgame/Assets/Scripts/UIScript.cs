@@ -66,7 +66,8 @@ public class UIScript : MonoBehaviour
         sTwo = GameObject.Find("Special_Two");
         sTwoImage = sTwo.GetComponent<Image>();
 
-
+        eOneImage.sprite = unused;
+        eTwoImage.sprite = unused;
         eThreeImage.sprite = locked;
         sOneImage.sprite = locked;
         sTwoImage.sprite = locked;
@@ -107,7 +108,7 @@ public class UIScript : MonoBehaviour
 
         if (skill.elementTwo.name != null)
         {
-            Debug.Log(skill.elementTwo);
+
             if (skill.elementTwo.name == "uSPrefab" && eTwoImage.sprite != unused)
             {
                 eTwoImage.sprite = unused;

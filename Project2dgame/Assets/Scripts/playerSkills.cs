@@ -35,6 +35,8 @@ public class playerSkills : MonoBehaviour
     public GameObject lavaPreFab;
 
     private GameObject UI;
+    private float time;
+    private bool canShoot;
 
 
 
@@ -123,11 +125,22 @@ public class playerSkills : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        time += Time.deltaTime;
+
+        if (time >0.5f && !canShoot)
+        {
+
+            canShoot = true;
+            time = 0;
+        }
+      
+
+        
 
         //Left_Mouse buttton normal attack
-        if (!Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
+        if (!Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0) && canShoot)
         {
-            if (elementOne != uSPreFab)
+           if (elementOne != uSPreFab)
             {
                 GameObject eleOne = Instantiate(elementOne, shootLocOne.transform.position, gameObject.transform.rotation) as GameObject;
                 eleOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
@@ -158,10 +171,14 @@ public class playerSkills : MonoBehaviour
                     eleOne.GetComponent<ElementScript>().eType = 5;
                 }
             }
+            canShoot = false;
+            time = 0;
         }
 
+       
+
         //Right_Mouse button normal attack
-        if (!Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse1))
+        if (!Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse1) && canShoot)
         {
             if (elementTwo != uSPreFab)
             {
@@ -195,11 +212,15 @@ public class playerSkills : MonoBehaviour
                 }
             }
 
+            canShoot = false;
+            time = 0;
+
         }
 
         //Ability reset
         if (Input.GetKeyUp(KeyCode.Mouse1) && unlockTwo == false)
         {
+           
             elementTwo = uSPreFab;
             Debug.Log(elementTwo);
             UI.GetComponent<UIScript>().updateUI();
@@ -207,7 +228,7 @@ public class playerSkills : MonoBehaviour
         }
 
         //Middle_Mouse button normal attack
-        if (!Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse2))
+        if (!Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse2) && canShoot)
         {
             if (elementThree != uSPreFab)
             {
@@ -240,19 +261,22 @@ public class playerSkills : MonoBehaviour
                     eleThree.GetComponent<ElementScript>().eType = 5;
                 }
             }
+            canShoot = false;
+            time = 0;
 
         }
 
         //ability reset
         if (Input.GetKeyUp(KeyCode.Mouse2) && unlockTwo == true && unlockThree == false)
         {
+           
             elementThree = uSPreFab;
             UI.GetComponent<UIScript>().updateUI();
 
         }
 
         //Special attacks
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0) && canShoot)
         {
             //Ice
             if (elementOne == airPreFab && elementTwo == waterPreFab)
@@ -302,10 +326,13 @@ public class playerSkills : MonoBehaviour
                 comOne.GetComponent<ElementScript>().eType = 11;
             }
 
+            canShoot = false;
+            time = 0;
+
 
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse1) && canShoot)
         {
             //Ice
             if (elementThree == airPreFab && elementTwo == waterPreFab)
@@ -354,9 +381,11 @@ public class playerSkills : MonoBehaviour
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
                 comOne.GetComponent<ElementScript>().eType = 11;
             }
+            canShoot = false;
+            time = 0;
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse2))
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse2) && canShoot)
         {
             //Ice
             if (elementOne == airPreFab && elementThree == waterPreFab)
@@ -405,6 +434,8 @@ public class playerSkills : MonoBehaviour
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
                 comOne.GetComponent<ElementScript>().eType = 11;
             }
+            canShoot = false;
+            time = 0;
         }
 
 

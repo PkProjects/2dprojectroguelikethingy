@@ -4,7 +4,7 @@ using System;
 
 public class BaseEnemyScript : MonoBehaviour
 {
-    public int health = 100;
+    public int health = 30;
     private GameObject player;
     public int activationRadius = 3;
     public bool patrol = true;

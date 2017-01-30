@@ -15,6 +15,7 @@ public class ProjectileScript : MonoBehaviour {
 	void Start () {
 
         origin = this.transform.position;
+        this.gameObject.AddComponent<Rigidbody2D>();
 		
 	}
 
@@ -22,7 +23,7 @@ public class ProjectileScript : MonoBehaviour {
     {
        // Debug.Log("collision");
         Destroy(gameObject);
-        Debug.Log(collision.collider.name);
+
 
         if (collision.collider.tag == "player")
         {
@@ -30,6 +31,7 @@ public class ProjectileScript : MonoBehaviour {
             FindObjectOfType<playerScript>().health -= 10;
         }
 
+       
     }
 
     // Update is called once per frame
