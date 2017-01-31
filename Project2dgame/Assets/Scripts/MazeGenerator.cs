@@ -160,6 +160,11 @@ public class MazeGenerator : MonoBehaviour
 		}
 	}
 
+	public int getCurrentLevel()
+	{
+		return currentFloor;
+	}
+
 	void checkConnections()
 	{
 		//Debug.Log ("Rebuilding level");
@@ -619,7 +624,7 @@ public class MazeGenerator : MonoBehaviour
 						region [i, j] = currentRegion;
 						if (prisonerCount < 1) {
 							if (currentFloor == 0 && cell == 0) {
-								//don't place a prisoner in the starting cell, that's the player!
+								//don't place a prisoner or enemies in the starting cell, that's the player!
 								enemies [i, j] = 0;
 							} else {
 								enemies [i, j] = 2;

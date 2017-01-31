@@ -8,6 +8,7 @@ public class SpawnScript : MonoBehaviour {
     private int timer;
     public int spawnTime;
     private int enemyType;
+	MazeGenerator mazeGen;
     
     //1 = Normal Guard
     //2 = Air Guard
@@ -19,6 +20,7 @@ public class SpawnScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+		mazeGen = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<MazeGenerator> ();
         enemyType = Random.Range(1,5);
 
         if (enemyType == 1)
@@ -47,8 +49,9 @@ public class SpawnScript : MonoBehaviour {
         }
 
 
-        GameObject instEnemy = Instantiate(enemyPrefab, this.transform.position, this.transform.rotation) as GameObject;
-        instEnemy.GetComponent<BaseEnemyScript>().type = enemyType;
+		GameObject instEnemy = Instantiate(enemyPrefab, this.transform.position, this.transform.rotation) as GameObject;
+		instEnemy.GetComponent<BaseEnemyScript>().type = enemyType;
+		instEnemy.GetComponent<BaseEnemyScript>().currentLevel = mazeGen.getCurrentLevel();
 
 
 
