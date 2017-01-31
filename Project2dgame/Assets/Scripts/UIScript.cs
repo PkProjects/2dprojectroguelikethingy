@@ -39,6 +39,7 @@ public class UIScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Debug.Log("start");
 
         airG = (GameObject)Resources.Load("Air");
         waterG = (GameObject)Resources.Load("Water");
@@ -55,8 +56,8 @@ public class UIScript : MonoBehaviour
         locked = lockedG.GetComponent<SpriteRenderer>().sprite;
 
 
-        eOne = GameObject.Find("Element_One");
-        eOneImage = eOne.GetComponent<Image>();
+        // eOne = GameObject.Find("Element_One");
+        //  eOneImage = eOne.GetComponent<Image>();
         eTwo = GameObject.Find("Element_Two");
         eTwoImage = eTwo.GetComponent<Image>();
         eThree = GameObject.Find("Element_Three");
@@ -66,7 +67,8 @@ public class UIScript : MonoBehaviour
         sTwo = GameObject.Find("Special_Two");
         sTwoImage = sTwo.GetComponent<Image>();
 
-        eOneImage.sprite = unused;
+        //eOneImage.sprite = unused;
+        //Debug.Log(eOneImage);
         eTwoImage.sprite = unused;
         eThreeImage.sprite = locked;
         sOneImage.sprite = locked;
@@ -77,35 +79,6 @@ public class UIScript : MonoBehaviour
 
     public void updateUI()
     {
-
-            if (skill.elementOne.name == "uSPreFab" && eOneImage.sprite != unused)
-            {
-                eOneImage.sprite = unused;
-
-            }
-
-            if (skill.elementOne.name == "AirPrefab" && eOneImage.sprite != air)
-            {
-                eOneImage.sprite = air;
-            }
-
-
-            if (skill.elementOne.name == "WaterPrefab" && eOneImage.sprite != water)
-            {
-                eOneImage.sprite = water;
-            }
-
-            if (skill.elementOne.name == "EarthPrefab" && eOneImage.sprite != earth)
-            {
-                eOneImage.sprite = earth;
-            }
-
-            if (skill.elementOne.name == "FirePrefab" && eOneImage.sprite != fire)
-            {
-                eOneImage.sprite = fire;
-           
-        }
-
         if (skill.elementTwo.name != null)
         {
 
@@ -166,5 +139,46 @@ public class UIScript : MonoBehaviour
         }
 
     }
+
+    public void setUI()
+    {
+        eOne = GameObject.Find("Element_One");
+        Debug.Log(skill.elementOne);
+        eOneImage = eOne.GetComponent<Image>();
+
+        airG = (GameObject)Resources.Load("Air");
+        waterG = (GameObject)Resources.Load("Water");
+        earthG = (GameObject)Resources.Load("Earth");
+        fireG = (GameObject)Resources.Load("Fire");
+
+        air = airG.GetComponent<SpriteRenderer>().sprite;
+        water = waterG.GetComponent<SpriteRenderer>().sprite;
+        earth = earthG.GetComponent<SpriteRenderer>().sprite;
+        fire = fireG.GetComponent<SpriteRenderer>().sprite;
+
+        if (skill.elementOne.name == "AirPrefab")
+        {
+            Debug.Log("Air");
+            eOneImage.sprite = air;
+        }
+
+        if (skill.elementOne.name == "WaterPrefab")
+        {
+            eOneImage.sprite = water;
+        }
+
+        if (skill.elementOne.name == "EarthPrefab")
+        {
+            eOneImage.sprite = earth;
+        }
+
+        if (skill.elementOne.name == "FirePrefab")
+        {
+            eOneImage.sprite = fire;
+            
+        }
+        
+    }
 }
+
 
