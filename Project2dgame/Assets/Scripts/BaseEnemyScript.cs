@@ -88,10 +88,9 @@ public class BaseEnemyScript : MonoBehaviour
         
 
 			if (hit.collider != null) {
-				if (hit.collider.tag == "wall" || hit.collider.tag == "enemy") {
+				if (hit.collider.tag == "wall" || hit.collider.tag == "door" || hit.collider.tag == "enemy") {
                     if (followPlayer == false)
                     {
-                        
                         SwitchCase();
                     }
 				}
@@ -120,7 +119,7 @@ public class BaseEnemyScript : MonoBehaviour
                 if (longHit.collider != null)
                 {
                     
-                    if (longHit.collider.tag != "wall")
+					if (longHit.collider.tag != "wall" || longHit.collider.tag != "door")
                     {
                         Vector3 dir = gameObject.transform.position - player.transform.position;
                         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
