@@ -127,8 +127,12 @@ public class MazeGenerator : MonoBehaviour
 		if (levelCompleted) {
 			currentFloor++;
 		}
-		buildDungeon ();
-		visualise ();
+		if (currentFloor >= 3) {
+			// go to main menu
+		} else {
+			buildDungeon ();
+			visualise ();
+		}
 	}
 	// this builds the entire dungeon array
 	void buildDungeon()
@@ -381,8 +385,14 @@ public class MazeGenerator : MonoBehaviour
 								//Debug.Log ("Made floor at x: " + x + " y: " + y);
 								if ( (elevatorRegion > region [x + 1, y] && region [x + 1, y] >= amountOfRooms) || ( elevatorRegion > region [x - 1, y] && region [x - 1, y] >= amountOfRooms)) {
 									maze [x, y] = PRISONDOOR;
-								} else if (region [x + 1, y] >= elevatorRegion || region [x - 1, y] >= elevatorRegion) {
+								} else if ( region [x + 1, y] == elevatorRegion || region [x - 1, y] == elevatorRegion) {
 									maze [x, y] = ELEVATORDOOR;
+								} else if (region [x + 1, y] > elevatorRegion || region [x - 1, y] > elevatorRegion) {
+									if (currentFloor != 0) {
+										maze [x, y] = FLOOR;
+									} else {
+										maze [x, y] = ELEVATORDOOR;
+									}
 								} else {
 									maze [x, y] = DOORHORI;
 								}
@@ -393,7 +403,7 @@ public class MazeGenerator : MonoBehaviour
 								if (random < 1) {
 									if ( (elevatorRegion > region [x + 1, y] && region [x + 1, y] >= amountOfRooms) || (elevatorRegion > region [x - 1, y] && region [x - 1, y] >= amountOfRooms)) {
 										maze [x, y] = PRISONDOOR;
-									} else if (region [x + 1, y] >= elevatorRegion || region [x - 1, y] >= elevatorRegion) {
+									} else if (region [x + 1, y] > elevatorRegion || region [x - 1, y] > elevatorRegion) {
 										maze [x, y] = ELEVATORDOOR;
 									} else {
 										maze [x, y] = DOORHORI;
@@ -406,8 +416,14 @@ public class MazeGenerator : MonoBehaviour
 							if (regionConnected [region [x, y + 1]] != 1 || regionConnected [region [x, y - 1]] != 1) {
 								if ( (elevatorRegion > region [x, y+1] && region [x, y+1] >= amountOfRooms) || (elevatorRegion > region [x, y - 1] && region [x, y - 1] >= amountOfRooms)) {
 									maze [x, y] = PRISONDOOR;
-								} else if (region [x, y+1] >= elevatorRegion || region [x, y - 1] >= elevatorRegion) {
+								} else if (region [x, y+1] == elevatorRegion || region [x, y - 1] == elevatorRegion) {
 									maze [x, y] = ELEVATORDOOR;
+								} else if (region [x, y+1] > elevatorRegion || region [x, y - 1] > elevatorRegion) {
+									if (currentFloor != 0) {
+										maze [x, y] = FLOOR;
+									} else {
+										maze [x, y] = ELEVATORDOOR;
+									}
 								} else {
 									maze [x, y] = DOORVERT;
 								}

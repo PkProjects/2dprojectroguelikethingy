@@ -15,7 +15,7 @@ public class playerScript : MonoBehaviour
     public Image health60;
     public Image health80;
     public float speedCap = 6;
-	private int enemyKillCount = 0;
+	private int enemyKillCount = 29;
 	public Text deathText;
 	float oldTime;
 	float newTime;
@@ -34,6 +34,16 @@ public class playerScript : MonoBehaviour
 	{
 		enemyKillCount++;
 		Debug.Log (enemyKillCount);
+	}
+
+	public int getKillCount()
+	{
+		return enemyKillCount;
+	}
+
+	public void resetKills()
+	{
+		enemyKillCount = 0;
 	}
 
     // Update is called once per frame
@@ -182,6 +192,7 @@ public class playerScript : MonoBehaviour
 	{
 		alive = false;
 		oldTime = Time.time;
+		resetKills ();
 		deathText.enabled = true;
 		respawn = true;
 	}
