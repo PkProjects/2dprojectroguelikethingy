@@ -12,7 +12,8 @@ public class MazeGenerator : MonoBehaviour
 	//prefabs for visualisation of the grid
 	public GameObject floorTile;
 	public GameObject wallTile;
-	public GameObject doorTile;
+	public GameObject doorHoriTile;
+	public GameObject doorVertTile;
 	public GameObject prisonDoor;
 	public GameObject prisonWall;
 	public GameObject enemyPrefab1;
@@ -42,7 +43,8 @@ public class MazeGenerator : MonoBehaviour
 	const int WALL = 9;
 	const int UNVISITED = -1;
 	const int FLOOR = 0;
-	const int DOOR = 2;
+	const int DOORVERT = 1;
+	const int DOORHORI = 2;
 	const int PRISONDOOR = 3;
 	const int PRISONWALL = 4;
 	const int ELEVATORFLOOR = 5;
@@ -205,20 +207,20 @@ public class MazeGenerator : MonoBehaviour
 						if (region [x + 1, y] != region [x - 1, y]) {
 							if (regionConnected [region [x + 1, y]] == 1 || regionConnected [region [x - 1, y]] == 1) {
 								//Debug.Log ("Made floor at x: " + x + " y: " + y);
-								maze [x, y] = DOOR;
+								maze [x, y] = DOORHORI;
 								regionConnected [region [x + 1, y]] = 1;
 								regionConnected [region [x - 1, y]] = 1;
 							} else {
 								var random = Random.Range (0, 10);
 								if (random < 1) {
-									maze [x, y] = DOOR;
+									maze [x, y] = DOORHORI;
 								}
 							}
 						}
 					} else if (maze [x, y + 1] == FLOOR && maze [x, y - 1] == FLOOR) {
 						if (region [x, y + 1] != region [x, y - 1]) {
 							if (regionConnected [region [x, y + 1]] == 1 || regionConnected [region [x, y - 1]] == 1) {
-								maze [x, y] = DOOR;
+								maze [x, y] = DOORVERT;
 								regionConnected [region [x, y + 1]] = 1;
 								regionConnected [region [x, y - 1]] = 1;
 							}
@@ -382,7 +384,7 @@ public class MazeGenerator : MonoBehaviour
 								} else if (region [x + 1, y] >= elevatorRegion || region [x - 1, y] >= elevatorRegion) {
 									maze [x, y] = ELEVATORDOOR;
 								} else {
-									maze [x, y] = DOOR;
+									maze [x, y] = DOORHORI;
 								}
 								regionConnected [region [x + 1, y]] = 1;
 								regionConnected [region [x - 1, y]] = 1;
@@ -394,7 +396,7 @@ public class MazeGenerator : MonoBehaviour
 									} else if (region [x + 1, y] >= elevatorRegion || region [x - 1, y] >= elevatorRegion) {
 										maze [x, y] = ELEVATORDOOR;
 									} else {
-										maze [x, y] = DOOR;
+										maze [x, y] = DOORHORI;
 									}
 								}
 							}
@@ -407,7 +409,7 @@ public class MazeGenerator : MonoBehaviour
 								} else if (region [x, y+1] >= elevatorRegion || region [x, y - 1] >= elevatorRegion) {
 									maze [x, y] = ELEVATORDOOR;
 								} else {
-									maze [x, y] = DOOR;
+									maze [x, y] = DOORVERT;
 								}
 								regionConnected [region [x, y + 1]] = 1;
 								regionConnected [region [x, y - 1]] = 1;
@@ -663,8 +665,10 @@ public class MazeGenerator : MonoBehaviour
 					temp = Instantiate (floorTile, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == WALL) {
 					temp =Instantiate (wallTile, new Vector2 (x, y), Quaternion.identity);
-				} else if (maze [x, y] == DOOR) {
-					temp =Instantiate (doorTile, new Vector2 (x, y), Quaternion.identity);
+				} else if (maze [x, y] == DOORHORI) {
+					temp =Instantiate (doorHoriTile, new Vector2 (x, y), Quaternion.identity);
+				} else if (maze [x, y] == DOORVERT) {
+					temp =Instantiate (doorVertTile, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == PRISONDOOR) {
 					temp =Instantiate (prisonDoor, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == PRISONWALL) {
