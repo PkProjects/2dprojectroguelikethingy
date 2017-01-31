@@ -29,6 +29,7 @@ public class ProjectileScript : MonoBehaviour {
         if (collision.collider.tag == "player")
         {
             FindObjectOfType<playerScript>().health -= 10;
+            FindObjectOfType<playerScript>().updateHealth();
             
         }
 

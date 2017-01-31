@@ -8,13 +8,18 @@ public class playerScript : MonoBehaviour
     private Rigidbody2D rigid;
     public int moveSpeed = 10;
     public int health = 100;
-    public Text healthText;
+    public Image health0;
+    public Image health20;
+    public Image health40;
+    public Image health60;
+    public Image health80;
     public float speedCap = 6;
 
     // Use this for initialization
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
+        updateHealth();
     }
 
     // Update is called once per frame
@@ -93,7 +98,63 @@ public class playerScript : MonoBehaviour
             rigid.velocity = new Vector2(rigid.velocity.x, -speedCap);
         }
 
-        healthText.text = health.ToString();
+       // healthText.text = health.ToString();
         
+    }
+
+    public void updateHealth()
+    {
+        if (health >80)
+        {
+            health0.color = Color.green;
+            health20.color = Color.green;
+            health40.color = Color.green;
+            health60.color = Color.green;
+            health80.color = Color.green;
+
+        }else
+
+        if (health >60 && health <=80)
+        {
+            health0.color = Color.green;
+            health20.color = Color.green;
+            health40.color = Color.green;
+            health60.color = Color.green;
+            health80.color = Color.red;
+        }else
+
+        if (health > 40 && health <= 60)
+        {
+            health0.color = Color.green;
+            health20.color = Color.green;
+            health40.color = Color.green;
+            health60.color = Color.red;
+            health80.color = Color.red;
+        }else
+
+        if (health > 20 && health <= 40)
+        {
+            health0.color = Color.green;
+            health20.color = Color.green;
+            health40.color = Color.red;
+            health60.color = Color.red;
+            health80.color = Color.red;
+        }else
+
+        if(health > 0 && health <=20)
+        {
+            health0.color = Color.green;
+            health20.color = Color.red;
+            health40.color = Color.red;
+            health60.color = Color.red;
+            health80.color = Color.red;
+        }
+
+        if (health <= 0)
+        {
+            health0.color = Color.red;
+            Debug.Log("Respawn");
+            //Add respawn code here;
+        }
     }
 }
