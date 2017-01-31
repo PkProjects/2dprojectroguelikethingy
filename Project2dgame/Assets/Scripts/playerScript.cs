@@ -15,7 +15,12 @@ public class playerScript : MonoBehaviour
     public Image health60;
     public Image health80;
     public float speedCap = 6;
-	public Vector2 spawnLocation;
+	private int enemyKillCount = 0;
+	public Text deathText;
+	float oldTime;
+	float newTime;
+	bool respawn;
+	bool alive = true;
 
     // Use this for initialization
     void Start()
@@ -25,9 +30,28 @@ public class playerScript : MonoBehaviour
         updateHealth();
     }
 
+	public void enemyKilled()
+	{
+		enemyKillCount++;
+		Debug.Log (enemyKillCount);
+	}
+
     // Update is called once per frame
     void Update()
     {
+		if (respawn) {
+			if (Time.time - oldTime >= 2) {
+				respawn = false;
+				Debug.Log ("Test");
+				MazeGenerator mazeGen = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<MazeGenerator> ();
+				mazeGen.startNextLevel (false);
+				health = maxHealth; 
+				updateHealth();
+				deathText.enabled = false;
+				alive = true;
+			}
+		}
+
         Vector3 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
@@ -153,7 +177,7 @@ public class playerScript : MonoBehaviour
             health80.color = Color.red;
         }
 
-        if (health <= 0)
+        if (health <= 0 && alive)
         {
             health0.color = Color.red;
             Debug.Log("Respawn");
@@ -164,12 +188,9 @@ public class playerScript : MonoBehaviour
 
 	void respawnPlayer()
 	{
-		transform.position = spawnLocation;
-		health = maxHealth;
-		health0.color = Color.green;
-		health20.color = Color.green;
-		health40.color = Color.green;
-		health60.color = Color.green;
-		health80.color = Color.green;
+		alive = false;
+		oldTime = Time.time;
+		deathText.enabled = true;
+		respawn = true;
 	}
 }
