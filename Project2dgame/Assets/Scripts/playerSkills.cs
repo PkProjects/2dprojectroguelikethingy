@@ -22,17 +22,17 @@ public class playerSkills : MonoBehaviour
     public GameObject shootLocTwo;
     public GameObject shootLocthree;
 
-    public GameObject airPreFab;
-    public GameObject waterPreFab;
-    public GameObject earthPreFab;
-    public GameObject firePreFab;
-    public GameObject uSPreFab;
-    public GameObject icePreFab;
-    public GameObject steamPreFab;
-    public GameObject dustPreFab;
-    public GameObject infernoPreFab;
-    public GameObject naturePreFab;
-    public GameObject lavaPreFab;
+    private GameObject airPreFab;
+    private GameObject waterPreFab;
+    private GameObject earthPreFab;
+    private GameObject firePreFab;
+    private GameObject uSPreFab;
+    private GameObject icePreFab;
+    private GameObject steamPreFab;
+    private GameObject dustPreFab;
+    private GameObject infernoPreFab;
+    private GameObject naturePreFab;
+    private GameObject lavaPreFab;
 
     private GameObject UI;
     private float time;
@@ -84,11 +84,7 @@ public class playerSkills : MonoBehaviour
         elementThree = uSPreFab;
 
         UI = GameObject.Find("UI");
-
         UI.GetComponent<UIScript>().setUI();
-
-
-
 
     }
 
@@ -156,8 +152,6 @@ public class playerSkills : MonoBehaviour
             canShoot = true;
             time = 0;
         }
-      
-
         
 
         //Left_Mouse buttton normal attack
@@ -240,10 +234,16 @@ public class playerSkills : MonoBehaviour
 
         }
 
+
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            elementTwo = uSPreFab;
+            Debug.Log(elementTwo);
+            UI.GetComponent<UIScript>().updateUI();
+        }
         //Ability reset
         if (Input.GetKeyUp(KeyCode.Mouse1) && unlockTwo == false)
         {
-           
             elementTwo = uSPreFab;
             Debug.Log(elementTwo);
             UI.GetComponent<UIScript>().updateUI();

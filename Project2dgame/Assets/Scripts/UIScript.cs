@@ -79,6 +79,30 @@ public class UIScript : MonoBehaviour
 
     public void updateUI()
     {
+
+        if (skill.elementOne.name == "AirPrefab")
+        {
+            Debug.Log("Air");
+            eOneImage.sprite = air;
+        }
+
+        if (skill.elementOne.name == "WaterPrefab")
+        {
+            eOneImage.sprite = water;
+        }
+
+        if (skill.elementOne.name == "EarthPrefab")
+        {
+            eOneImage.sprite = earth;
+        }
+
+        if (skill.elementOne.name == "FirePrefab")
+        {
+            eOneImage.sprite = fire;
+
+        }
+
+
         if (skill.elementTwo.name != null)
         {
 
