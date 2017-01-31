@@ -34,6 +34,7 @@ public class MazeGenerator : MonoBehaviour
 	public GameObject tWallDown;
 	public GameObject tWallLeft;
 	public GameObject tWallRight;
+	public GameObject blackWall;
 
 	// The definitions of the wall
 	const int WALL = 9;
@@ -59,6 +60,7 @@ public class MazeGenerator : MonoBehaviour
 	const int TSPLITDOWN = 21;
 	const int TSPLITLEFT = 22;
 	const int TSPLITRIGHT = 23;
+	const int BLACKWALL = 24;
 
 	//Level size
 	[SerializeField]
@@ -158,6 +160,11 @@ public class MazeGenerator : MonoBehaviour
 		}
 	}
 
+	public int getCurrentLevel()
+	{
+		return currentFloor;
+	}
+
 	void checkConnections()
 	{
 		//Debug.Log ("Rebuilding level");
@@ -241,8 +248,8 @@ public class MazeGenerator : MonoBehaviour
 					wallCount++;
 					downWall = true;
 				} 
-				if (wallCount > 3 || wallCount == 0) {
-					maze [currentX, currentY] = WALL;	
+				if (wallCount > 3) {
+					maze [currentX, currentY] = BLACKWALL;	
 				} else if (wallCount > 2) {
 					if (!upWall) {
 						maze [currentX, currentY] = TSPLITDOWN;	
@@ -257,37 +264,39 @@ public class MazeGenerator : MonoBehaviour
 						maze [currentX, currentY] = TSPLITUP;	
 					}
 				} else if (wallCount > 1) {
-						if (upWall && rightWall) {
-							maze [currentX, currentY] = BOTTOMLEFT;	
-						}
-						if (upWall && leftWall) {
-							maze [currentX, currentY] = BOTTOMRIGHT;	
-						}
-						if (upWall && downWall) {
-							maze [currentX, currentY] = STRAIGHTVERT;	
-						}
-						if (leftWall && rightWall) {
-							maze [currentX, currentY] = STRAIGHTHORI;	
-						}
-						if (downWall && rightWall) {
-							maze [currentX, currentY] = TOPLEFT;	
-						}
-						if (downWall && leftWall) {
-							maze [currentX, currentY] = TOPRIGHT;	
-						}
+					if (upWall && rightWall) {
+						maze [currentX, currentY] = BOTTOMLEFT;	
+					}
+					if (upWall && leftWall) {
+						maze [currentX, currentY] = BOTTOMRIGHT;	
+					}
+					if (upWall && downWall) {
+						maze [currentX, currentY] = STRAIGHTVERT;	
+					}
+					if (leftWall && rightWall) {
+						maze [currentX, currentY] = STRAIGHTHORI;	
+					}
+					if (downWall && rightWall) {
+						maze [currentX, currentY] = TOPLEFT;	
+					}
+					if (downWall && leftWall) {
+						maze [currentX, currentY] = TOPRIGHT;	
+					}
 				} else if (wallCount == 1) {
-						if (upWall) {
-							maze [currentX, currentY] = BOTTOMSTOP;	
-						}
-						if (rightWall) {
-							maze [currentX, currentY] = LEFTSTOP;	
-						}
-						if (leftWall) {
-							maze [currentX, currentY] = RIGHTSTOP;	
-						}
-						if (downWall) {
-							maze [currentX, currentY] = TOPSTOP;	
-						}
+					if (upWall) {
+						maze [currentX, currentY] = BOTTOMSTOP;	
+					}
+					if (rightWall) {
+						maze [currentX, currentY] = LEFTSTOP;	
+					}
+					if (leftWall) {
+						maze [currentX, currentY] = RIGHTSTOP;	
+					}
+					if (downWall) {
+						maze [currentX, currentY] = TOPSTOP;	
+					}
+				} else if (wallCount == 0) {
+					maze [currentX, currentY] = WALL;	
 				}
 			}
 		}
@@ -615,7 +624,8 @@ public class MazeGenerator : MonoBehaviour
 						region [i, j] = currentRegion;
 						if (prisonerCount < 1) {
 							if (currentFloor == 0 && cell == 0) {
-								//don't place a prisoner in the starting cell, that's the player!
+								//don't place a prisoner or enemies in the starting cell, that's the player!
+								enemies [i, j] = 0;
 							} else {
 								enemies [i, j] = 2;
 								prisonerCount++;
@@ -675,6 +685,8 @@ public class MazeGenerator : MonoBehaviour
 					Instantiate (tWallLeft, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == TSPLITRIGHT) {
 					Instantiate (tWallRight, new Vector2 (x, y), Quaternion.identity);
+				}else if (maze [x, y] == BLACKWALL) {
+					Instantiate (blackWall, new Vector2 (x, y), Quaternion.identity);
 				}
 
 				if (enemies [x, y] == 1) {

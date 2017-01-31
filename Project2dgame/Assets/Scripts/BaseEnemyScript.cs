@@ -5,6 +5,8 @@ using System;
 public class BaseEnemyScript : MonoBehaviour
 {
     public int health = 30;
+	public int healthLevelScaling = 20;
+	public int currentLevel = 0;
     private GameObject player;
     public int activationRadius = 3;
     public bool patrol = true;
@@ -45,7 +47,7 @@ public class BaseEnemyScript : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("Player");
-        
+		health += healthLevelScaling * currentLevel;
         bullet = (GameObject)Resources.Load("Bullet");
        
         sprite = gameObject.GetComponent<SpriteRenderer>();
