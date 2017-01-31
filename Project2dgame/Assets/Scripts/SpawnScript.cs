@@ -21,6 +21,7 @@ public class SpawnScript : MonoBehaviour {
 	void Start () {
 
 		mazeGen = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<MazeGenerator> ();
+		GameObject maze = GameObject.FindGameObjectWithTag ("levelHolder");
         enemyType = Random.Range(1,5);
 
         if (enemyType == 1)
@@ -51,6 +52,7 @@ public class SpawnScript : MonoBehaviour {
 
 		GameObject instEnemy = Instantiate(enemyPrefab, this.transform.position, this.transform.rotation) as GameObject;
 		instEnemy.GetComponent<BaseEnemyScript>().type = enemyType;
+		instEnemy.transform.parent = maze.transform;
 		instEnemy.GetComponent<BaseEnemyScript>().currentLevel = mazeGen.getCurrentLevel();
 
 

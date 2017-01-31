@@ -35,6 +35,8 @@ public class MazeGenerator : MonoBehaviour
 	public GameObject tWallLeft;
 	public GameObject tWallRight;
 	public GameObject blackWall;
+	public GameObject emptyPref;
+	GameObject temp;
 
 	// The definitions of the wall
 	const int WALL = 9;
@@ -108,11 +110,23 @@ public class MazeGenerator : MonoBehaviour
 	/// </summary>
 	void Start () 
 	{
+		emptyPref = Instantiate (emptyPref, new Vector2 (0, 0), Quaternion.identity);
+
+		buildDungeon ();
+		visualise ();
+		//startNextLevel ();
+	}
+
+	public void startNextLevel()
+	{
+		foreach (Transform child in emptyPref.transform) {
+			GameObject.Destroy (child.gameObject);
+		}
+		currentFloor++;
 		buildDungeon ();
 		visualise ();
 	}
-
-	// this exists just for ease of use
+	// this builds the entire dungeon array
 	void buildDungeon()
 	{
 		initMaze();
@@ -585,6 +599,7 @@ public class MazeGenerator : MonoBehaviour
 			int y = Mathf.RoundToInt (Random.Range (0, height - elevatorHeight));
 			if (currentFloor != 0) {
 				player.transform.position = new Vector2 (x+1, y+1);
+				player.GetComponent<playerScript> ().spawnLocation = new Vector2(x+1, y+1);
 			}
 			for (int i = x; i < x + elevatorWidth; i++) {
 				for (int j = y; j < y + elevatorHeight; j++) {
@@ -611,6 +626,7 @@ public class MazeGenerator : MonoBehaviour
 
 			if (currentFloor == 0 && cell == 0) {
 				player.transform.position = new Vector2 (x+1, y+1);
+				player.GetComponent<playerScript> ().spawnLocation = new Vector2(x+1, y+1);
 			}
 			currentRegion++;
 			for (int i = x; i < x + cellWidth; i++) {
@@ -644,56 +660,61 @@ public class MazeGenerator : MonoBehaviour
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				if (maze [x, y] == FLOOR) {
-					Instantiate (floorTile, new Vector2 (x, y), Quaternion.identity);
+					temp = Instantiate (floorTile, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == WALL) {
-					Instantiate (wallTile, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (wallTile, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == DOOR) {
-					Instantiate (doorTile, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (doorTile, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == PRISONDOOR) {
-					Instantiate (prisonDoor, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (prisonDoor, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == PRISONWALL) {
-					Instantiate (prisonWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (prisonWall, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == ELEVATORDOOR) {
-					Instantiate (elevatorDoor, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (elevatorDoor, new Vector2 (x, y), Quaternion.identity);
 				} else if (maze [x, y] == ELEVATORFLOOR) {
-					Instantiate (elevatorFloor, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (elevatorFloor, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == STRAIGHTHORI) {
-					Instantiate (horiWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (horiWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == STRAIGHTVERT) {
-					Instantiate (vertWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (vertWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == BOTTOMLEFT) {
-					Instantiate (botLeftWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (botLeftWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == BOTTOMRIGHT) {
-					Instantiate (botRightWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (botRightWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == TOPLEFT) {
-					Instantiate (topLeftWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (topLeftWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == TOPRIGHT) {
-					Instantiate (topRightWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (topRightWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == BOTTOMSTOP) {
-					Instantiate (botStopWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (botStopWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == TOPSTOP) {
-					Instantiate (topStopWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (topStopWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == LEFTSTOP) {
-					Instantiate (leftStopWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (leftStopWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == RIGHTSTOP) {
-					Instantiate (rightStopWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (rightStopWall, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == TSPLITUP) {
-					Instantiate (tWallUp, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (tWallUp, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == TSPLITDOWN) {
-					Instantiate (tWallDown, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (tWallDown, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == TSPLITLEFT) {
-					Instantiate (tWallLeft, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (tWallLeft, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == TSPLITRIGHT) {
-					Instantiate (tWallRight, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (tWallRight, new Vector2 (x, y), Quaternion.identity);
 				}else if (maze [x, y] == BLACKWALL) {
-					Instantiate (blackWall, new Vector2 (x, y), Quaternion.identity);
+					temp =Instantiate (blackWall, new Vector2 (x, y), Quaternion.identity);
 				}
-
+				if (temp != null) {
+					temp.transform.parent = emptyPref.transform;
+				}
 				if (enemies [x, y] == 1) {
-					Instantiate (enemyPrefab1, new Vector2(x,y), Quaternion.identity);
+					temp = Instantiate (enemyPrefab1, new Vector2(x,y), Quaternion.identity);
 				}
 				if (enemies [x, y] == 2) {
-					Instantiate (prisonerPrefab, new Vector2(x,y), Quaternion.identity);
+					temp = Instantiate (prisonerPrefab, new Vector2(x,y), Quaternion.identity);
+				}
+				if (temp != null) {
+					temp.transform.parent = emptyPref.transform;
 				}
 			}
 		}
