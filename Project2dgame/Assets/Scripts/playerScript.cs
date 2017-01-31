@@ -8,16 +8,19 @@ public class playerScript : MonoBehaviour
     private Rigidbody2D rigid;
     public int moveSpeed = 10;
     public int health = 100;
+	private int maxHealth;
     public Image health0;
     public Image health20;
     public Image health40;
     public Image health60;
     public Image health80;
     public float speedCap = 6;
+	public Vector2 spawnLocation;
 
     // Use this for initialization
     void Start()
     {
+		maxHealth = health;
         rigid = GetComponent<Rigidbody2D>();
         updateHealth();
     }
@@ -155,6 +158,18 @@ public class playerScript : MonoBehaviour
             health0.color = Color.red;
             Debug.Log("Respawn");
             //Add respawn code here;
+			respawnPlayer();
         }
     }
+
+	void respawnPlayer()
+	{
+		transform.position = spawnLocation;
+		health = maxHealth;
+		health0.color = Color.green;
+		health20.color = Color.green;
+		health40.color = Color.green;
+		health60.color = Color.green;
+		health80.color = Color.green;
+	}
 }

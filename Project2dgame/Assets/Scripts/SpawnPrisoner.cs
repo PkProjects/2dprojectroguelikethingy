@@ -21,6 +21,7 @@ public class SpawnPrisoner : MonoBehaviour
     void Start()
     {
 
+		GameObject maze = GameObject.FindGameObjectWithTag ("levelHolder");
         enemyType = Random.Range(2, 5);
         
         if (enemyType == 2)
@@ -45,7 +46,8 @@ public class SpawnPrisoner : MonoBehaviour
 
 
         GameObject instEnemy = Instantiate(enemyPrefab, this.transform.position, this.transform.rotation) as GameObject;
-        instEnemy.GetComponent<PrisonerScript>().type = enemyType;
+		instEnemy.GetComponent<PrisonerScript>().type = enemyType;
+		instEnemy.transform.parent = maze.transform;
 
     }
 }
