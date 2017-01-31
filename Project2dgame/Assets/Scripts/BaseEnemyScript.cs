@@ -19,6 +19,9 @@ public class BaseEnemyScript : MonoBehaviour
     private GameObject shootLoc;
     private bool switchDirection;
 
+    private Vector3 shotDir;
+    private float shotAngle;
+
     public Vector3 hitDirection;
 
     [Range(0.01f, 0.1f)]
@@ -52,12 +55,7 @@ public class BaseEnemyScript : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log(collision);
-        Debug.Log(hitDirection);
-    }
-
+    
     void OnTriggerEnter2D(Collider2D coll)
 	{
 		if (coll.gameObject.tag == "player") {
@@ -127,8 +125,8 @@ public class BaseEnemyScript : MonoBehaviour
                         transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
                         sprite.flipY = false;
 
-                        if (longHit.collider.tag == "player")
-                        {
+                       // if (longHit.collider.tag == "player")
+                       // {
                             
                             patrol = false;
 
@@ -152,7 +150,7 @@ public class BaseEnemyScript : MonoBehaviour
                                 instBullet.GetComponent<ProjectileScript>().velocity = new Vector3(0, -1f * bulletSpeed, 0);
                                 readyShot = false;
                             }
-                        }
+                        //}
                     }
                 }
 
@@ -220,6 +218,13 @@ public class BaseEnemyScript : MonoBehaviour
                     
 					break;
 
+                case 8: // Investigate shot
+
+                        gameObject.transform.Translate(new Vector2(0, -1) * speed);
+                        sprite.transform.rotation = Quaternion.AngleAxis(shotAngle - 90f, Vector3.forward);
+                        Debug.Log("going");
+                        
+                        break;
 				}
 
            
@@ -245,6 +250,19 @@ public class BaseEnemyScript : MonoBehaviour
         caseNr = UnityEngine.Random.Range(0, 8);
         walkRange = UnityEngine.Random.Range(100, 200);
 
+    }
+
+    public void getPlayerDirection()
+    {
+        shotDir =    this.transform.position - player.transform.position;
+        shotAngle = Mathf.Atan2(shotDir.y, shotDir.x) * Mathf.Rad2Deg;
+       
+        caseNr = 8;
+        walkRange = UnityEngine.Random.Range(100, 200);
+
+       
+
+        Debug.Log(shotDir);
     }
 
 

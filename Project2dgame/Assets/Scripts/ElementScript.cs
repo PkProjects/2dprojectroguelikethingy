@@ -38,13 +38,14 @@ public class ElementScript : MonoBehaviour
             {
                 collision.collider.GetComponent<BaseEnemyScript>().health -= 5;
                 Debug.Log(collision.collider.GetComponent<BaseEnemyScript>().health);
-                collision.collider.GetComponent<BaseEnemyScript>().hitDirection = -velocity;
+                collision.collider.GetComponent<BaseEnemyScript>().getPlayerDirection();
             }
 
             else
             {
                 collision.collider.GetComponent<BaseEnemyScript>().health -= 10;
                 Debug.Log(collision.collider.GetComponent<BaseEnemyScript>().health);
+                collision.collider.GetComponent<BaseEnemyScript>().getPlayerDirection();
 
             }
         }

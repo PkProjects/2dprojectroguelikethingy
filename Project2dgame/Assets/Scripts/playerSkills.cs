@@ -278,6 +278,8 @@ public class playerSkills : MonoBehaviour
         //Special attacks
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0) && canShoot)
         {
+            Debug.Log(elementOne);
+            Debug.Log(elementTwo);
             //Ice
             if (elementOne == airPreFab && elementTwo == waterPreFab)
             {
@@ -302,6 +304,14 @@ public class playerSkills : MonoBehaviour
                 comOne.GetComponent<ElementScript>().eType = 8;
             }
 
+            //ice
+            if (elementOne == waterPreFab && elementTwo == airPreFab)
+            {
+                GameObject comOne = Instantiate(icePreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 6;
+            }
+
             //Nature
             if (elementOne == waterPreFab && elementTwo == earthPreFab)
             {
@@ -318,8 +328,48 @@ public class playerSkills : MonoBehaviour
                 comOne.GetComponent<ElementScript>().eType = 10;
             }
 
+            //Nature
+            if (elementOne == earthPreFab && elementTwo == waterPreFab)
+            {
+                GameObject comOne = Instantiate(naturePreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 9;
+            }
+
+            //Dust
+            if (elementOne == earthPreFab && elementTwo == airPreFab)
+            {
+                GameObject comOne = Instantiate(dustPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 7;
+            }
+
             //Lava
             if (elementOne == earthPreFab && elementTwo == firePreFab)
+            {
+                GameObject comOne = Instantiate(lavaPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 11;
+            }
+
+            //Inferno
+            if (elementOne == firePreFab && elementTwo == airPreFab)
+            {
+                GameObject comOne = Instantiate(infernoPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 8;
+            }
+
+            //Steam
+            if (elementOne == firePreFab && elementTwo == waterPreFab)
+            {
+                GameObject comOne = Instantiate(steamPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 10;
+            }
+
+            //lava
+            if (elementOne == firePreFab && elementTwo == earthPreFab)
             {
                 GameObject comOne = Instantiate(lavaPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
@@ -335,7 +385,7 @@ public class playerSkills : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse1) && canShoot)
         {
             //Ice
-            if (elementThree == airPreFab && elementTwo == waterPreFab)
+            if (elementOne == airPreFab && elementTwo == waterPreFab)
             {
                 GameObject comOne = Instantiate(icePreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
@@ -343,7 +393,7 @@ public class playerSkills : MonoBehaviour
             }
 
             //Dust
-            if (elementThree == airPreFab && elementTwo == earthPreFab)
+            if (elementOne == airPreFab && elementTwo == earthPreFab)
             {
                 GameObject comOne = Instantiate(dustPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
@@ -351,15 +401,23 @@ public class playerSkills : MonoBehaviour
             }
 
             //Inferno
-            if (elementThree == airPreFab && elementTwo == firePreFab)
+            if (elementOne == airPreFab && elementTwo == firePreFab)
             {
                 GameObject comOne = Instantiate(infernoPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
                 comOne.GetComponent<ElementScript>().eType = 8;
             }
 
+            //ice
+            if (elementOne == waterPreFab && elementTwo == airPreFab)
+            {
+                GameObject comOne = Instantiate(icePreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 6;
+            }
+
             //Nature
-            if (elementThree == waterPreFab && elementTwo == earthPreFab)
+            if (elementOne == waterPreFab && elementTwo == earthPreFab)
             {
                 GameObject comOne = Instantiate(naturePreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
@@ -367,15 +425,55 @@ public class playerSkills : MonoBehaviour
             }
 
             //Steam
-            if (elementThree == waterPreFab && elementTwo == firePreFab)
+            if (elementOne == waterPreFab && elementTwo == firePreFab)
             {
                 GameObject comOne = Instantiate(steamPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
                 comOne.GetComponent<ElementScript>().eType = 10;
             }
 
+            //Nature
+            if (elementOne == earthPreFab && elementTwo == waterPreFab)
+            {
+                GameObject comOne = Instantiate(naturePreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 9;
+            }
+
+            //Dust
+            if (elementOne == earthPreFab && elementTwo == airPreFab)
+            {
+                GameObject comOne = Instantiate(dustPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 7;
+            }
+
             //Lava
-            if (elementThree == earthPreFab && elementTwo == firePreFab)
+            if (elementOne == earthPreFab && elementTwo == firePreFab)
+            {
+                GameObject comOne = Instantiate(lavaPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 11;
+            }
+
+            //Inferno
+            if (elementOne == firePreFab && elementTwo == airPreFab)
+            {
+                GameObject comOne = Instantiate(infernoPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 8;
+            }
+
+            //Steam
+            if (elementOne == firePreFab && elementTwo == waterPreFab)
+            {
+                GameObject comOne = Instantiate(steamPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 10;
+            }
+
+            //lava
+            if (elementOne == firePreFab && elementTwo == earthPreFab)
             {
                 GameObject comOne = Instantiate(lavaPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
@@ -388,7 +486,7 @@ public class playerSkills : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse2) && canShoot)
         {
             //Ice
-            if (elementOne == airPreFab && elementThree == waterPreFab)
+            if (elementOne == airPreFab && elementTwo == waterPreFab)
             {
                 GameObject comOne = Instantiate(icePreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
@@ -396,7 +494,7 @@ public class playerSkills : MonoBehaviour
             }
 
             //Dust
-            if (elementOne == airPreFab && elementThree == earthPreFab)
+            if (elementOne == airPreFab && elementTwo == earthPreFab)
             {
                 GameObject comOne = Instantiate(dustPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
@@ -404,15 +502,23 @@ public class playerSkills : MonoBehaviour
             }
 
             //Inferno
-            if (elementOne == airPreFab && elementThree == firePreFab)
+            if (elementOne == airPreFab && elementTwo == firePreFab)
             {
                 GameObject comOne = Instantiate(infernoPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
                 comOne.GetComponent<ElementScript>().eType = 8;
             }
 
+            //ice
+            if (elementOne == waterPreFab && elementTwo == airPreFab)
+            {
+                GameObject comOne = Instantiate(icePreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 6;
+            }
+
             //Nature
-            if (elementOne == waterPreFab && elementThree == earthPreFab)
+            if (elementOne == waterPreFab && elementTwo == earthPreFab)
             {
                 GameObject comOne = Instantiate(naturePreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
@@ -420,20 +526,61 @@ public class playerSkills : MonoBehaviour
             }
 
             //Steam
-            if (elementOne == waterPreFab && elementThree == firePreFab)
+            if (elementOne == waterPreFab && elementTwo == firePreFab)
             {
                 GameObject comOne = Instantiate(steamPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
                 comOne.GetComponent<ElementScript>().eType = 10;
             }
 
+            //Nature
+            if (elementOne == earthPreFab && elementTwo == waterPreFab)
+            {
+                GameObject comOne = Instantiate(naturePreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 9;
+            }
+
+            //Dust
+            if (elementOne == earthPreFab && elementTwo == airPreFab)
+            {
+                GameObject comOne = Instantiate(dustPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 7;
+            }
+
             //Lava
-            if (elementOne == earthPreFab && elementThree == firePreFab)
+            if (elementOne == earthPreFab && elementTwo == firePreFab)
             {
                 GameObject comOne = Instantiate(lavaPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
                 comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
                 comOne.GetComponent<ElementScript>().eType = 11;
             }
+
+            //Inferno
+            if (elementOne == firePreFab && elementTwo == airPreFab)
+            {
+                GameObject comOne = Instantiate(infernoPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 8;
+            }
+
+            //Steam
+            if (elementOne == firePreFab && elementTwo == waterPreFab)
+            {
+                GameObject comOne = Instantiate(steamPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 10;
+            }
+
+            //lava
+            if (elementOne == firePreFab && elementTwo == earthPreFab)
+            {
+                GameObject comOne = Instantiate(lavaPreFab, shootLocTwo.transform.position, gameObject.transform.rotation) as GameObject;
+                comOne.GetComponent<ElementScript>().velocity = new Vector3(0, 1f * elementSpeed, 0);
+                comOne.GetComponent<ElementScript>().eType = 11;
+            }
+
             canShoot = false;
             time = 0;
         }
