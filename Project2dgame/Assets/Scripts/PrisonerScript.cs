@@ -117,7 +117,7 @@ public class PrisonerScript : MonoBehaviour
                 longHit = Physics2D.Raycast(gameObject.transform.position, forward, longRayRange);
                 Vector3 dir = gameObject.transform.position - player.transform.position;
                 float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
+                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 sprite.flipY = false;
 
 
