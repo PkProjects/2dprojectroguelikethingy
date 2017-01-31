@@ -241,11 +241,18 @@ public class BaseEnemyScript : MonoBehaviour
 			}
 
 			if (health <= 0) {
-				Destroy (this.gameObject);
+				enemyDies ();
 			}
 		}
 
     }
+
+	void enemyDies()
+	{
+		//GameObject player = 
+		GameObject.FindGameObjectWithTag ("player").GetComponent<playerScript>().enemyKilled();
+		Destroy (this.gameObject);
+	}
 
     void SwitchCase()
     {

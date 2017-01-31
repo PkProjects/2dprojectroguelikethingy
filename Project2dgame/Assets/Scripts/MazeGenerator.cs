@@ -117,12 +117,14 @@ public class MazeGenerator : MonoBehaviour
 		//startNextLevel ();
 	}
 
-	public void startNextLevel()
+	public void startNextLevel(bool levelCompleted)
 	{
 		foreach (Transform child in emptyPref.transform) {
 			GameObject.Destroy (child.gameObject);
 		}
-		currentFloor++;
+		if (levelCompleted) {
+			currentFloor++;
+		}
 		buildDungeon ();
 		visualise ();
 	}
@@ -599,7 +601,6 @@ public class MazeGenerator : MonoBehaviour
 			int y = Mathf.RoundToInt (Random.Range (0, height - elevatorHeight));
 			if (currentFloor != 0) {
 				player.transform.position = new Vector2 (x+1, y+1);
-				player.GetComponent<playerScript> ().spawnLocation = new Vector2(x+1, y+1);
 			}
 			for (int i = x; i < x + elevatorWidth; i++) {
 				for (int j = y; j < y + elevatorHeight; j++) {
@@ -626,7 +627,6 @@ public class MazeGenerator : MonoBehaviour
 
 			if (currentFloor == 0 && cell == 0) {
 				player.transform.position = new Vector2 (x+1, y+1);
-				player.GetComponent<playerScript> ().spawnLocation = new Vector2(x+1, y+1);
 			}
 			currentRegion++;
 			for (int i = x; i < x + cellWidth; i++) {
