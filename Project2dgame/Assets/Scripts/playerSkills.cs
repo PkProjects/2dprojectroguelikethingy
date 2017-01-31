@@ -57,12 +57,35 @@ public class playerSkills : MonoBehaviour
         uSPreFab = (GameObject)Resources.Load("Elements/uSPrefab");
 
 
+        Debug.Log(SelectScene.element);
+        if (SelectScene.element == 1)
+        {
+            elementOne = airPreFab;
+        }
 
-        elementOne = uSPreFab;
+        if (SelectScene.element == 2)
+        {
+            elementOne = waterPreFab;
+        }
+
+        if (SelectScene.element == 3)
+        {
+            elementOne = earthPreFab;
+        }
+
+        if (SelectScene.element == 4)
+        {
+            elementOne = firePreFab;
+        }
+
+        
+       
         elementTwo = uSPreFab;
         elementThree = uSPreFab;
 
         UI = GameObject.Find("UI");
+
+        UI.GetComponent<UIScript>().setUI();
 
 
 
