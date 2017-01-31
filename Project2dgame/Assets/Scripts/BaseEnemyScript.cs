@@ -88,7 +88,7 @@ public class BaseEnemyScript : MonoBehaviour
         
 
 			if (hit.collider != null) {
-				if (hit.collider.tag == "wall" || hit.collider.tag == "door" || hit.collider.tag == "enemy") {
+				if (hit.collider.tag == "wall" || hit.collider.tag == "enemy") {
                     if (followPlayer == false)
                     {
                         SwitchCase();
@@ -97,6 +97,7 @@ public class BaseEnemyScript : MonoBehaviour
 			}
 
 			if (longHit.collider != null) {
+                
 				if (longHit.collider.tag == "player") {
 					playerDistance = Vector3.Distance (this.transform.position, player.transform.position);
 					
@@ -119,8 +120,9 @@ public class BaseEnemyScript : MonoBehaviour
                 if (longHit.collider != null)
                 {
                     
-					if (longHit.collider.tag != "wall" || longHit.collider.tag != "door")
+					if (longHit.collider.tag != "wall")
                     {
+                        Debug.Log(longHit.collider.tag);
                         Vector3 dir = gameObject.transform.position - player.transform.position;
                         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
                         transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);

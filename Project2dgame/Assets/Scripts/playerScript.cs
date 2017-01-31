@@ -6,6 +6,7 @@ public class playerScript : MonoBehaviour
 {
 
     private Rigidbody2D rigid;
+    private bool isMoving;
     public int moveSpeed = 10;
     public int health = 100;
 	private int maxHealth;
@@ -39,6 +40,14 @@ public class playerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (isMoving == false)
+        {
+            this.GetComponent<Animator>().enabled = false;
+        }
+        else { this.GetComponent<Animator>().enabled = true; }
+
+
 		if (respawn) {
 			if (Time.time - oldTime >= 2) {
 				respawn = false;
@@ -58,33 +67,41 @@ public class playerScript : MonoBehaviour
 			transform.rotation = Quaternion.AngleAxis (angle - 90f, Vector3.forward);
 			if (Input.GetKey (KeyCode.W)) {
 				rigid.AddForce (Vector2.up * moveSpeed);
+                isMoving = true;
 			}
 			if (Input.GetKey (KeyCode.D)) {
 				rigid.AddForce (Vector2.right * moveSpeed);
-			}
+                isMoving = true;
+            }
 			if (Input.GetKey (KeyCode.A)) {
 				rigid.AddForce (-Vector2.right * moveSpeed);
-			}
+                isMoving = true;
+            }
 			if (Input.GetKey (KeyCode.S)) {
 				rigid.AddForce (-Vector2.up * moveSpeed);
-			}
+                isMoving = true;
+            }
 
 
 			// When keys are released resets the direction's velocity
 			if (Input.GetKeyUp (KeyCode.W)) {
 				rigid.velocity = new Vector2 (rigid.velocity.x, 0);
+                isMoving = false;
 			}
 
 			if (Input.GetKeyUp (KeyCode.D)) {
 				rigid.velocity = new Vector2 (0, rigid.velocity.y);
+                isMoving = false;
 			}
 
 			if (Input.GetKeyUp (KeyCode.A)) {
 				rigid.velocity = new Vector2 (0, rigid.velocity.y);
+                isMoving = false;
 			}
 
 			if (Input.GetKeyUp (KeyCode.S)) {
 				rigid.velocity = new Vector2 (rigid.velocity.x, 0);
+                isMoving = false;
 			}
 
 
